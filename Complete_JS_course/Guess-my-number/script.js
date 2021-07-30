@@ -1,15 +1,29 @@
 "use strict";
 
 const again = document.querySelector(".again");
-const message = document.querySelector(".message");
 const number = document.querySelector(".number");
-const score = document.querySelector(".score");
-const highscore = document.querySelector(".highscore");
+const highScore = document.querySelector(".highscore");
 const body = document.querySelector("body");
 
 const check = document.querySelector(".check");
 
 const getSecretNumber = () => Math.trunc(Math.random() * 20) + 1;
+
+/**
+ *
+ * @param {string} message - get text for showing
+ */
+const displayMessage = (message) => {
+  document.querySelector(".message").textContent = message;
+};
+
+/**
+ *
+ * @param {string || number} score - get text for showing
+ */
+const displayScore = (score) => {
+  document.querySelector(".score").textContent = score;
+};
 
 const state = {
   secretNumber: getSecretNumber(),
@@ -49,29 +63,26 @@ const state = {
 /**
  * Change game style and html, using state
  *
- * @param {string} status - can be [default | win | lose]
+ * @param {"default" || "win" || "lose"} status - can be [default | win | lose]
  */
 
 const finishGame = (status) => {
-  message.textContent = state[status].text;
+  displayMessage(state[status].text);
   body.style.backgroundColor = state[status].body.backgroundColor;
   number.style.width = state[status].number.width;
   number.textContent = status !== "default" ? state.secretNumber : "?";
-};
-
-const changeHighscore = () => {
-  finishGame("win");
-  if (state.score > highscore.textContent) highscore.textContent = state.score;
 };
 
 check.addEventListener("click", () => {
   const guess = Number(document.querySelector(".guess").value);
 
   // When there's no input
-  if (!guess) message.textContent = "No number!";
+  if (!guess) displayMessage("No number!");
   // When player wins
   else if (guess === state.secretNumber) {
-    changeHighscore();
+    finishGame("win");
+    if (state.score > highScore.textContent)
+      highScore.textContent = state.score;
   }
   // When guess is too high
   else {
@@ -79,19 +90,17 @@ check.addEventListener("click", () => {
 
     if (state.score <= 0) {
       finishGame("lose");
-      score.textContent = 0;
+      displayScore(0);
     } else {
-      message.textContent =
-        guess > state.secretNumber ? "Too high!" : "Too low!";
-      score.textContent = state.score;
+      displayMessage(guess > state.secretNumber ? "Too high!" : "Too low!");
+      displayScore(state.score);
     }
   }
 });
 
 again.addEventListener("click", () => {
   finishGame("default");
-  state.score = 20;
-  score.textContent = state.score;
+  displayScore((state.score = 20));
   state.secretNumber = getSecretNumber();
 
   document.querySelector(".guess").value = "";
