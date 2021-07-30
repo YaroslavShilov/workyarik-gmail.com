@@ -14,55 +14,53 @@ const getSecretNumber = () => Math.trunc(Math.random() * 20) + 1;
 const state = {
   secretNumber: getSecretNumber(),
   score: 20,
-  style: {
-    win: {
-      body: {
-        backgroundColor: "#60b347",
-      },
-      number: {
-        width: "30rem",
-      },
+
+  default: {
+    text: "Start guessing...",
+    body: {
+      backgroundColor: "#222222",
     },
-    normal: {
-      body: {
-        backgroundColor: "#222222",
-      },
-      number: {
-        width: "15rem",
-      },
+    number: {
+      width: "15rem",
     },
-    lose: {
-      body: {
-        backgroundColor: "tomato",
-      },
-      number: {
-        width: "15rem",
-      },
+  },
+
+  win: {
+    text: "Current Number!",
+    body: {
+      backgroundColor: "#60b347",
+    },
+    number: {
+      width: "30rem",
+    },
+  },
+
+  lose: {
+    text: "You lost the game!!!",
+    body: {
+      backgroundColor: "tomato",
+    },
+    number: {
+      width: "15rem",
     },
   },
 };
 
-const changeScore = (text) => {
-  --state.score;
+/**
+ * Change game style and html, using state
+ *
+ * @param {string} status - can be [default | win | lose]
+ */
 
-  if (state.score <= 0) {
-    message.textContent = "You lost the game!!!";
-    body.style.backgroundColor = state.style.lose.body.backgroundColor;
-    number.style.width = state.style.lose.number.width;
-    score.textContent = 0;
-  } else {
-    message.textContent = text;
-    score.textContent = state.score;
-  }
+const finishGame = (status) => {
+  message.textContent = state[status].text;
+  body.style.backgroundColor = state[status].body.backgroundColor;
+  number.style.width = state[status].number.width;
+  number.textContent = status !== "default" ? state.secretNumber : "?";
 };
 
 const changeHighscore = () => {
-  message.textContent = "Current Number!";
-
-  body.style.backgroundColor = state.style.win.body.backgroundColor;
-  number.style.width = state.style.win.number.width;
-  number.textContent = state.secretNumber;
-
+  finishGame("win");
   if (state.score > highscore.textContent) highscore.textContent = state.score;
 };
 
@@ -76,20 +74,22 @@ check.addEventListener("click", () => {
     changeHighscore();
   }
   // When guess is too high
-  else if (guess > state.secretNumber) {
-    changeScore("Too high!");
-  }
-  //When guess is too low
-  else if (guess < state.secretNumber) {
-    changeScore("Too low!");
+  else {
+    --state.score;
+
+    if (state.score <= 0) {
+      finishGame("lose");
+      score.textContent = 0;
+    } else {
+      message.textContent =
+        guess > state.secretNumber ? "Too high!" : "Too low!";
+      score.textContent = state.score;
+    }
   }
 });
 
 again.addEventListener("click", () => {
-  body.style.backgroundColor = state.style.normal.body.backgroundColor;
-  number.style.width = state.style.normal.number.width;
-  number.textContent = "?";
-  message.textContent = "Start guessing...";
+  finishGame("default");
   state.score = 20;
   score.textContent = state.score;
   state.secretNumber = getSecretNumber();
