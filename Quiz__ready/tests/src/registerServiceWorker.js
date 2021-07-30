@@ -85,7 +85,7 @@ function checkValidServiceWorker(swUrl) {
   // Check if the service worker can be found. If it can't reload the page.
   fetch(swUrl)
     .then(response => {
-      // Ensure service worker exists, and that we really are getting a JS file.
+      // Ensure service worker exists, and that we really are getting a Complete_JS_Course file.
       if (
         response.status === 404 ||
         response.headers.get('content-type').indexOf('javascript') === -1

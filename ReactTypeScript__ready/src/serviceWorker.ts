@@ -112,7 +112,7 @@ function checkValidServiceWorker(swUrl: string, config?: Config) {
     headers: { 'Service-Worker': 'script' }
   })
     .then(response => {
-      // Ensure service worker exists, and that we really are getting a JS file.
+      // Ensure service worker exists, and that we really are getting a Complete_JS_Course file.
       const contentType = response.headers.get('content-type');
       if (
         response.status === 404 ||
