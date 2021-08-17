@@ -3,27 +3,36 @@
 // Selecting elements
 const score0El = document.getElementById("score--0");
 const score1El = document.getElementById("score--1");
+const current0El = document.getElementById("current--0");
+const current1El = document.getElementById("current--1");
 const player0El = document.querySelector(".player--0");
 const player1El = document.querySelector(".player--1");
 const diceEl = document.querySelector(".dice");
-const btnNew = document.querySelector(".btn--new");
 const btnRoll = document.querySelector(".btn--roll");
 const btnHold = document.querySelector(".btn--hold");
+const btnNew = document.querySelector(".btn--new");
 
-// Starting conditions
-score0El.textContent = "0";
-score1El.textContent = "0";
-diceEl.classList.add("hidden");
+let scores, currentScore, activePlayer, playing;
 
-// State
-let currentScore = 0;
-let activePlayer = 0;
-const scores = [0, 0];
-let playing = true;
+const init = () => {
+  scores = [0, 0];
+  currentScore = 0;
+  activePlayer = 0;
+  playing = true;
 
-/**
- * @param {number} number
- */
+  score0El.textContent = "0";
+  score1El.textContent = "0";
+  current0El.textContent = "0";
+  current1El.textContent = "0";
+  diceEl.classList.add("hidden");
+  player0El.classList.remove("player--winner");
+  player1El.classList.remove("player--winner");
+  player1El.classList.remove("player--active");
+  player0El.classList.add("player--active");
+};
+
+init();
+
 const changeCurrentHtml = (number) => {
   document.getElementById(
     `current--${activePlayer}`
@@ -70,8 +79,9 @@ btnHold.addEventListener("click", () => {
     ].toString();
 
     // 2. Check if score >= 100: true - current player wins, false - switch the player
-    if (scores[activePlayer] >= 100) {
+    if (scores[activePlayer] >= 20) {
       playing = false;
+      diceEl.classList.add("hidden");
       document.querySelector(".player--active").classList.add("player--winner");
       document
         .querySelector(".player--winner")
@@ -83,3 +93,4 @@ btnHold.addEventListener("click", () => {
 });
 
 // User reset the game
+btnNew.addEventListener("click", init);
