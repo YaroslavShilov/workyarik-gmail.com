@@ -142,11 +142,13 @@ console.log("Me: ", me);
 // }
  */
 
+// Primitive types
 let lastName = "Williams";
 let oldLastName = lastName;
 lastName = "Davis";
 console.log(lastName, oldLastName);
 
+// Reference types
 const jessica = {
   firstName: "Jessica",
   lastName: "Williams",
@@ -157,3 +159,20 @@ const marriedJessica = jessica;
 marriedJessica.lastName = "Davis";
 console.log("Before marriage: ", jessica);
 console.log("After marriage: ", marriedJessica);
+
+// Copying objects
+const jessica2 = {
+  firstName: "Jessica",
+  lastName: "Williams",
+  age: 27,
+  car: {
+    name: "hello",
+  },
+};
+
+const jessicaCopy = { ...jessica2 }; // Shallow copy
+jessicaCopy.lastName = "Davis";
+jessicaCopy.car.name = "Lada";
+
+console.log("Before marriage: ", jessica2);
+console.log("After marriage: ", jessicaCopy);
