@@ -57,6 +57,7 @@ const jonas = {
 jonas.calcAge();
 */
 
+/*
 const jonas = {
   firstName: "Jonas",
   year: 1991,
@@ -105,3 +106,54 @@ const addArrow = (a, b) => {
 };
 
 addArrow(2, 5, 8);
+*/
+
+/*
+let age = 30;
+let oldAge = age;
+age = 31;
+console.log(age);
+console.log(oldAge);
+
+const me = {
+  name: "Jonas",
+  age: 30,
+  car: {
+    name: "Lada",
+  },
+};
+
+const friend = { ...me };
+
+friend.age = 32;
+friend.car.name = "Legs";
+
+console.log("Friend: ", friend);
+//{
+// name: "Jonas",
+// age: 32,
+// car: { name: "Legs"}
+// }
+console.log("Me: ", me);
+//{
+// name: "Jonas",
+// age: 30,
+// car: { name: "Legs"}
+// }
+ */
+
+let lastName = "Williams";
+let oldLastName = lastName;
+lastName = "Davis";
+console.log(lastName, oldLastName);
+
+const jessica = {
+  firstName: "Jessica",
+  lastName: "Williams",
+  age: 27,
+};
+
+const marriedJessica = jessica;
+marriedJessica.lastName = "Davis";
+console.log("Before marriage: ", jessica);
+console.log("After marriage: ", marriedJessica);
