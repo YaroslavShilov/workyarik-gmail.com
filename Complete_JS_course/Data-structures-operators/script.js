@@ -86,7 +86,59 @@ const restaurant = {
     will be delivered to ${address} at ${time}
     `);
   },
+
+  orderPasta: function (ing1, ing2, ing3) {
+    console.log(
+      `Here is your delicious pasta with ${ing1}, ${ing2} and ${ing3}`
+    );
+  },
 };
+
+/*
+// The spread Operator
+ */
+
+const arr = [7, 8, 9];
+const badNewArr = [1, 2, arr[0], arr[1], arr[2]];
+
+console.log(badNewArr);
+
+const newArr = [1, 2, ...arr];
+console.log(newArr);
+
+console.log(...newArr);
+
+const newMenu = [...restaurant.mainMenu, "Gnocci"];
+console.log(newMenu);
+
+// Copy array
+const mainMenuCopy = [...restaurant.mainMenu];
+
+// Join 2 arrays
+const menu = [...restaurant.mainMenu, ...restaurant.starterMenu];
+console.log(menu);
+
+// Iterables: arrays, strings, maps, sets. NOT objects
+const str = "Jonas";
+const letters = [...str, " ", "S."];
+console.log(letters);
+console.log(...str);
+// console.log(`${...str} Schmedtmann`);
+
+const ingredients = ["test ing 1", "test ing 2", "test ing 3"];
+
+restaurant.orderPasta(...ingredients);
+
+// Objects
+const newRestaurant = { foundedIn: 1998, ...restaurant, founder: "Guiseppe" };
+console.log(newRestaurant);
+
+const restaurantCopy = { ...restaurant }; // Shallow copy
+restaurantCopy.name = "Ristorante Roma";
+console.log(restaurantCopy);
+console.log(restaurant);
+/*
+// Destructing Objects
 
 restaurant.orderDelivery({
   time: "22:30",
@@ -129,3 +181,5 @@ const {
   fri: { open: o, close: c, test: t = 1 },
 } = openingHours;
 console.log(o, c, t);
+
+ */
