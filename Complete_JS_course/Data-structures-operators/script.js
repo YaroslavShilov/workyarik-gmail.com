@@ -48,6 +48,21 @@ console.log(i, j, k);
 const [p = 1, q = 1, r = 1] = [8, 9];
 console.log(p, q, r);
 */
+const weekdays = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+const openingHours = {
+  [weekdays[3]]: {
+    open: 12,
+    close: 22,
+  },
+  [weekdays[4]]: {
+    open: 11,
+    close: 23,
+  },
+  [weekdays[5]]: {
+    open: 0, // Open 24 hours
+    close: 24,
+  },
+};
 
 const restaurant = {
   name: "Classico Italiano",
@@ -56,51 +71,68 @@ const restaurant = {
   starterMenu: ["Focaccia", "Bruschetta", "Garlic Bread", "Caprese Salad"],
   mainMenu: ["Pizza", "Pasta", "Risotto"],
 
-  openingHours: {
-    thu: {
-      open: 12,
-      close: 22,
-    },
-    fri: {
-      open: 11,
-      close: 23,
-    },
-    sat: {
-      open: 0, // Open 24 hours
-      close: 24,
-    },
-  },
+  // ES6 enhanced object literals
+  openingHours,
 
-  order: function (starterIndex, mainIndex) {
+  order(starterIndex, mainIndex) {
     return [this.starterMenu[starterIndex], this.mainMenu[mainIndex]];
   },
 
-  orderDelivery: function ({
-    starterIndex = 1,
-    mainIndex = 0,
-    time = "20:20",
-    address,
-  }) {
+  orderDelivery({ starterIndex = 1, mainIndex = 0, time = "20:20", address }) {
     console.log(`
     Order received! ${this.starterMenu[starterIndex]} and ${this.mainMenu[mainIndex]}
     will be delivered to ${address} at ${time}
     `);
   },
 
-  orderPasta: function (ing1, ing2, ing3) {
+  orderPasta(ing1, ing2, ing3) {
     console.log(
       `Here is your delicious pasta with ${ing1}, ${ing2} and ${ing3}`
     );
   },
 
-  orderPizza: function (mainIngredient, ...otherIngredients) {
+  orderPizza(mainIngredient, ...otherIngredients) {
     console.log(mainIngredient);
     console.log(otherIngredients);
   },
 };
 
+//////////////////////////////////////////
+// Optional Chaining
+if (restaurant.openingHours && restaurant.openingHours.mon) {
+  console.log(restaurant.openingHours.mon.open);
+}
+
+// With Optional chaining
+// if "openingHours" exist, do if "mon" exist, do ".open"
+console.log(restaurant.openingHours?.mon?.open);
+
+// Example
+const days = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+for (const day of days) {
+  console.log(day);
+  const open = restaurant.openingHours[day]?.open ?? "nope";
+  console.log(`
+    On ${day}, we open at ${open}
+  `);
+}
+
+// Methods
+// if use ?? we get 0, '' = true
+// if use || or && we get 0, '' = false
+console.log(restaurant.orderNone?.(0, 1) ?? "Method does'nt exist"); // Method doesn't exist
+console.log(restaurant.order?.(0, 1) ?? "Method does'nt exist"); // result
+
+// Arrays
+//check is array empty
+const users = [{ name: "Jonas" }, { name: "" }];
+console.log(users[0]?.name ?? "User array empty"); // Jonas
+console.log(users[1]?.name ?? "User array empty"); // '';
+console.log(users[2]?.name ?? "User array empty"); // "User array empty";
+
 /////////////////////////////////////////
 // Looping Arrays
+/*
 const menu = [...restaurant.starterMenu, ...restaurant.mainMenu];
 
 for (const item of menu) {
@@ -112,46 +144,46 @@ for (const [i, el] of menu.entries()) {
 }
 
 console.log(...menu.entries());
+*/
 
-/*
 ///////////////////////////
 // The Nullish Coalescing Operator
-
+/*
 restaurant.numGuests = 0;
-console.log(restaurant.numGuests || 10);
+console.log(restaurant.numGuests || 10); //10
 
 // Nullish: null and undefined (NOT 0 or '')
 restaurant.numGuests = 0;
-console.log(restaurant.numGuests ?? 10);
+console.log(restaurant.numGuests ?? 10); //0
 
 restaurant.numGuests = "";
-console.log(restaurant.numGuests ?? 10);
+console.log(restaurant.numGuests ?? 10); // ''
 
 restaurant.numGuests = null;
-console.log(restaurant.numGuests ?? 10);
+console.log(restaurant.numGuests ?? 10); //10
 
 restaurant.numGuests = undefined;
-console.log(restaurant.numGuests ?? 10);
- */
+console.log(restaurant.numGuests ?? 10); //10
+*/
 
-/*
 /////////////////////////////////
 // Short Circuiting (&& and ||);
-
+/*
 console.log("------- OR ---------");
 // Use ANY data type, return ANY data type, short-circuiting
-console.log(3 || "Jonas");
-console.log("" || "Jonas");
-console.log(true || 0);
-console.log(undefined || null);
-console.log(0 || false);
+console.log(3 || "Jonas"); //3
+console.log("" || "Jonas"); //Jonas
+console.log(true || 0); //true
+console.log(undefined || null); //null
+console.log(0 || false); //false
 
+//restaurant.numGuests is undefined
 //instead of restaurant.numGuests ? restaurant.numGuests : 10; we can write:
 const guests1 = restaurant.numGuests ? restaurant.numGuests : 10;
-console.log(guests1);
+console.log(guests1); //10
 
 const guests2 = restaurant.numGuests || 10;
-console.log(guests2);
+console.log(guests2); //10
 
 console.log("------- AND ---------");
 console.log(0 && "Jonas");
@@ -160,16 +192,16 @@ console.log(7 && "Jonas");
 console.log("Hello" && 23 && null && "Jonas");
 console.log("Hello" && 23 && true && "Jonas");
 
+//if isn't undefined to do the code
 if (restaurant.orderPizza) {
   restaurant.orderPizza("mushrooms", "spinach");
 }
 restaurant.orderPizza && restaurant.orderPizza("mushrooms", "spinach");
- */
+*/
 
-/*
 ///////////////////////////////////
 // The Rest Pattern and Parameters (...)
-
+/*
 const arr = [1, 2, ...[3, 4]];
 
 // Rest, because on Left side of =
