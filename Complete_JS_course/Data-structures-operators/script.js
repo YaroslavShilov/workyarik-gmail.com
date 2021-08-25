@@ -97,6 +97,135 @@ const restaurant = {
   },
 };
 
+////////////////////////////////////////////
+// Maps
+/*
+const rest = new Map();
+console.log(rest); // {}
+rest.set("name", "Classico Italiano");
+rest.set(1, "Firenze, Italy");
+rest.set(2, "Lisbon, Portugal");
+console.log(rest); //{"name" => "Classico Italiano", 1 => "Firenze, Italy", 2 => "Lisbon, Portugal"}
+
+rest
+  .set("categories", ["categ-1", "categ-2", "categ-3"])
+  .set("open", 11)
+  .set("close", 23)
+  .set(true, "We are open :D")
+  .set(false, "We are closed :(");
+console.log(rest);
+//{
+// "name" => "Classico Italiano",
+// 1 => "Firenze, Italy",
+// 2 => "Lisbon, Portugal",
+// "categories" => Array(3),
+// "open" => 11,
+// "close" => 23,
+// true => "We are open :D",
+// false => "We are closed :(",
+//}
+console.log(rest.get("name")); // Classico Italiano
+console.log(rest.get(true)); // We are open :D
+console.log(rest.get("true")); // undefined - because we have true as a boolean, not "true" as a string
+
+const time = 21;
+//                                   21 > 11 && 21 < 23; result: true; rest.get(true) // We are open :D
+console.log(rest.get(time > rest.get("open") && time < rest.get("close"))); // We are open :D
+
+console.log(rest.has("categories")); // true
+rest.delete(2); // delete 2 => "Lisbon, Portugal"
+console.log(rest.get(2)); // undefined;
+console.log(rest.size); // 7
+rest.clear();
+console.log(rest); // {}
+console.log(rest.size); // 0
+
+rest.set([1, 2], "Test 1");
+console.log(rest); // {[1,2] => 'Test 1'};
+console.log(rest.get([1, 2])); // undefined - because these two arrays are not the same object, because reference type
+const arr = [2, 3];
+rest.set(arr, "Test 2");
+console.log(rest.get(arr)); // Test 2 - because we use the same array (reference type);
+
+rest.set(document.querySelector("body"), "Body");
+console.log(rest); //{[1,2] => "Test 1", [2,3] => "Test 2", body => "Body"};
+console.log(rest.get(document.querySelector("body"))); // Body;
+ */
+
+////////////////////////////////////////////////////
+// Maps: iteration
+/*
+const question = new Map([
+  ["question", "What is the best programming language in the world?"],
+  [1, "C"],
+  [2, "Java"],
+  [3, "JavaScript"],
+  ["correct", 3],
+  [true, "Correct answer!!!"],
+  [false, "Try again!"],
+]);
+console.log(question);
+//{
+// "question" => "What is the best programming language in the world?",
+// 1 => "C",
+// 2 => "Java",
+// 3 => "JavaScript",
+// "correct" => 3,
+// true => "Correct answer!!!",
+// false => "Try again!",
+//}
+
+console.log(openingHours); //{thu: {…}, fri: {…}, sat: {…}}
+//{
+//   "tue": {open: 12, close: 22},
+//   "wed": {open: 11, close: 23},
+//   "fri": {open: 0, close: 24},
+//};
+
+// Convert object to arr
+console.log(Object.entries(openingHours));
+//[
+//   ["tue", {open: 12, close: 22}],
+//   ["wed", {open: 11, close: 23}],
+//   ["fri", {open: 0, close: 24},]
+//];
+
+// Convert object to map
+const hoursMap = new Map(Object.entries(openingHours));
+console.log(hoursMap);
+//{
+//   "tue" => {open: 12, close: 22},
+//   "wed" => {open: 11, close: 23},
+//   "fri" => {open: 0, close: 24},
+//};
+
+// Map can be iterable
+// Quiz app
+console.log(question.get("question")); //What is the best programming language in the world?
+for (const [key, value] of question) {
+  if (typeof key === "number") console.log(`Answer ${key}: ${value}`);
+  //Answer 1: C
+  //Answer 2: Java
+  //Answer 3: JavaScript
+}
+
+const answer = Number(prompt("Your answer"));
+const test = new Map();
+// answer = 3, will be true, we get "Correct answer!!!"
+// answer != 3, will be false, we get "Try again!"
+
+// Convert map to array
+const convertMap = new Map([
+  [true, "yes"],
+  [false, "no"],
+]);
+console.log(convertMap); // { true => "yes", false => "no" }
+console.log([...convertMap]); // [ [true, "yes"], [false, "no"] ], map can be iterate
+console.log([...convertMap.keys()]); // [true, false]
+console.log([...convertMap.values()]); // ["yes", "no"]
+console.log([...{ 1: 1, 2: 2 }]); // obj can't be iterate
+ */
+
 //////////////////////////
 // Looping Objects
 /*
@@ -429,6 +558,7 @@ team1 < team2
 
 ///////////////////////////////
 // Coding Challenge #2
+/*
 // Let's continue with our football betting app! Keep using the 'game' variable from
 // before.
 //   Your tasks:
@@ -536,3 +666,58 @@ for (const [i, name] of game.scored.entries()) {
 }
 
 console.log(scorers);
+*/
+
+//////////////////////////////////////////////////
+// Sets - remove duplicated values of arrays and can be iterable
+/*
+const ordersSet = new Set([
+  "Pasta",
+  "Pizza",
+  "Pizza",
+  "Risotto",
+  "Pasta",
+  "Pizza",
+]);
+console.log(new Set("Jonas")); // {"J", "o", "n", "a", "s"} - obj
+console.log(ordersSet); // {"Pasta", "Pizza", "Risotto"} - obj, without duplicated string;
+console.log(ordersSet.size); // 3
+console.log(ordersSet.has("Pizza")); // true - check includes
+console.log(ordersSet.has("Bread")); // false
+ordersSet.add("Garlic Bread");
+ordersSet.add("Garlic Bread");
+console.log(ordersSet); // {"Pasta", "Pizza", "Risotto", "Garlic Bread"} - only add unique
+ordersSet.delete("Risotto");
+ordersSet.delete("Car");
+console.log(ordersSet); // {"Pasta", "Pizza", "Garlic Bread"} - delete "Risotto", "Car" - doesn't exist
+console.log(ordersSet[0]); // undefined - because it's object
+console.log(ordersSet["Pasta"]); // undefined - because it doesn't have value, only key;
+for (const order of ordersSet) {
+  console.log(order); // "Pasta"; "Pizza"; "Garlic Bread"
+}
+ordersSet.clear();
+console.log(ordersSet); // {} - delete all
+
+// Example
+const staff = ["Waiter", "Chef", "Waiter", "Manager", "Chef", "Waiter"]; // array of all stuff in the restaurant
+const staffUnique = new Set(staff); // {"Waiter", "Chef", "Manager"}
+console.log([...staffUnique]); // ["Waiter", "Chef", "Manager"] - because Set obj can be iterable
+
+console.log(new Set(staff).size); // 3
+console.log([...staffUnique].length); // 3
+
+console.log(new Set("Jonasschmedtmann").size); // 11 - only unique letters
+console.log("Jonasschmedtmann".length); // 16 - all letters
+*/
+
+//////////////////////////////////////////////////
+// Challenge #3
+// 1.  Create an array 'events' of the different game events that happened (no
+// duplicates)
+// 2.  After the game has finished, is was found that the yellow card from minute 64
+// was unfair. So remove this event from the game events log.
+// 3.  Compute and log the following string to the console: "An event happened, on
+// average, every 9 minutes" (keep in mind that a game has 90 minutes)
+// 4.  Loop over 'gameEvents' and log each element to the console, marking
+// whether it's in the first half or second half (after 45 min) of the game, like this:
+//   [FIRST HALF] 17: ⚽  GOAL
