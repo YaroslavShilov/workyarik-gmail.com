@@ -712,12 +712,66 @@ console.log("Jonasschmedtmann".length); // 16 - all letters
 
 //////////////////////////////////////////////////
 // Challenge #3
+const gameEvents = new Map([
+  [17, "Goal"],
+  [36, "Substitution"],
+  [47, "Goal"],
+  [61, "Substitution"],
+  [64, "Yellow card"],
+  [69, "Red card"],
+  [70, "Substitution"],
+  [72, "Substitution"],
+  [76, "Goal"],
+  [80, "Goal"],
+  [92, "Yellow card"],
+]);
+
 // 1.  Create an array 'events' of the different game events that happened (no
 // duplicates)
+const events = [...new Set([...gameEvents.values()])];
+console.log(events);
+
 // 2.  After the game has finished, is was found that the yellow card from minute 64
 // was unfair. So remove this event from the game events log.
+gameEvents.delete(64);
+console.log(gameEvents);
+
 // 3.  Compute and log the following string to the console: "An event happened, on
 // average, every 9 minutes" (keep in mind that a game has 90 minutes)
+
+// Create initial state of events
+const eventTimes = {};
+for (const event of events) {
+  eventTimes[event] = [0];
+}
+
+// Add times to events' state
+for (const [time, event] of [...gameEvents]) {
+  eventTimes[event].push(time);
+}
+console.log(eventTimes);
+
+const average = {};
+for (const [event, times] of Object.entries(eventTimes)) {
+  let sumOfTime = 0;
+  for (let i = 1; i < times.length; i++) {
+    if (times[i] < 90) {
+      sumOfTime += times[i] - times[i - 1];
+    }
+  }
+  console.log(
+    `An ${event} happened, on average, every ${
+      sumOfTime / times.length
+    } minutes`
+  );
+  average[event] = sumOfTime / times.length;
+}
+
 // 4.  Loop over 'gameEvents' and log each element to the console, marking
 // whether it's in the first half or second half (after 45 min) of the game, like this:
 //   [FIRST HALF] 17: ⚽  GOAL
+for (const [time, event] of gameEvents) {
+  let halfType = "";
+  time <= 45 ? (halfType = "FIRST HALF") : (halfType = "SECOND HALF");
+  console.log(`[${halfType}] ${time}: ${event}`);
+}
