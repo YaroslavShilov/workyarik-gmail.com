@@ -739,39 +739,36 @@ console.log(gameEvents);
 // 3.  Compute and log the following string to the console: "An event happened, on
 // average, every 9 minutes" (keep in mind that a game has 90 minutes)
 
-// Create initial state of events
-const eventTimes = {};
-for (const event of events) {
-  eventTimes[event] = [0];
-}
-
 // Add times to events' state
+const eventTimes = {};
 for (const [time, event] of [...gameEvents]) {
-  eventTimes[event].push(time);
+  if (time <= 90) {
+    eventTimes[event]
+      ? eventTimes[event].push(time)
+      : (eventTimes[event] = [time]);
+  }
 }
-console.log(eventTimes);
 
 const average = {};
 for (const [event, times] of Object.entries(eventTimes)) {
   let sumOfTime = 0;
-  for (let i = 1; i < times.length; i++) {
-    if (times[i] < 90) {
-      sumOfTime += times[i] - times[i - 1];
-    }
+
+  for (let i = 0; i < times.length; i++) {
+    // If we have previous time of event, get time since previous time
+    // Get average of event
+    sumOfTime += i !== 0 ? times[i] - times[i - 1] : times[i];
   }
-  console.log(
-    `An ${event} happened, on average, every ${
-      sumOfTime / times.length
-    } minutes`
-  );
-  average[event] = sumOfTime / times.length;
+  const averageTime = sumOfTime / times.length;
+
+  console.log(`An ${event} happened, on average, every ${averageTime} minutes`);
+
+  average[event] = averageTime;
 }
 
 // 4.  Loop over 'gameEvents' and log each element to the console, marking
 // whether it's in the first half or second half (after 45 min) of the game, like this:
 //   [FIRST HALF] 17: ⚽  GOAL
 for (const [time, event] of gameEvents) {
-  let halfType = "";
-  time <= 45 ? (halfType = "FIRST HALF") : (halfType = "SECOND HALF");
+  let halfType = time <= 45 ? "FIRST HALF" : "SECOND HALF";
   console.log(`[${halfType}] ${time}: ${event}`);
 }
