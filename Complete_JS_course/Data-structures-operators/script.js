@@ -777,6 +777,7 @@ for (const [time, event] of gameEvents) {
 
 ///////////////////////////////////////////////////////////
 // Working with strings
+/*
 const airline = "TAP Air Portugal";
 const plane = "A320";
 console.log(plane[0]); // A
@@ -816,3 +817,178 @@ checkMiddleSeat("3E"); // You got the middle seat :|
 console.log(new String("Jonas")); // {"Jonas"}
 console.log(typeof new String("Jonas")); // object
 console.log(typeof new String("Jonas").slice(1)); // string
+
+console.log(airline.toLowerCase()); // tap air portugal
+console.log(airline.toUpperCase()); // TAP AIR PORTUGAL
+
+// Fix capitalization in name
+const passenger = "jOnAS"; // should be Jonas
+const passengerCorrect =
+  passenger[0].toUpperCase() + passenger.slice(1).toLowerCase();
+console.log(passengerCorrect); // Jonas
+
+// Comparing emails
+const email = "hello@jonas.io";
+const loginEmail = " Hello@Jonas.Io \n";
+const normalizedEmail = loginEmail.trim().toLowerCase();
+// The trim() method removes whitespace from both ends of a string
+console.log(normalizedEmail); // hello@jonas.io
+console.log(email === normalizedEmail); // true
+
+// Replacing
+const priceGB = "288,97£";
+const priceUS = priceGB.replace("£", "$").replace(",", ".");
+console.log(priceUS); // 288.97$
+
+const announcement =
+  "All passengers come to boarding door 23. Boarding door 23!";
+
+console.log(announcement.replace("door", "gate")); // replace only the first "door"
+console.log(announcement.replaceAll("door", "gate")); // replace all "door"
+console.log(announcement.replace(/door/g, "gate")); // replace all "door" using regularExp (g-global)
+
+// Booleans
+const plane2 = "A320neo";
+console.log(plane2.includes("32")); // true
+console.log(plane2.includes("An")); // false
+console.log(plane2.startsWith("Air")); // false
+console.log(plane2.startsWith("A3")); // true
+console.log(plane2.endsWith("A3")); // false
+console.log(plane2.endsWith("eo")); // true
+
+if (plane2.startsWith("A320") && plane2.endsWith("neo")) console.log("cool");
+
+// Practice exercise
+const checkBaggage = function (items) {
+  const baggage = items.toLowerCase();
+  if (baggage.includes("knife") || baggage.includes("gun")) {
+    console.log("You are NOT allowed on a board");
+  } else {
+    console.log("Welcome on a board");
+  }
+};
+
+checkBaggage("I have a Laptop, some Food and a Pocket Knife"); // no
+checkBaggage("Socks and camera"); // welcome
+checkBaggage("Got some snacks and a gun for protection"); // no
+
+// Split and join
+console.log("a+ver+nice+string".split("+")); // ["a", "ver", "nice", "string"] - split by "+"
+console.log("Jonas Schmedtmann".split(" ")); // ["Jonas", "Schmedtmann"]
+
+const [firstName, lastName] = "Jonas Schmedtmann".split(" ");
+console.log(firstName, lastName); // Jonas Schmedtmann
+
+const newName = ["Mr.", firstName, lastName.toUpperCase()].join(" "); // join - concatenating array separated by "spacer"
+console.log(newName); // Mr. Jonas SCHMEDTMANN
+
+const capitalizeName = function (name) {
+  const names = [];
+  for (const word of name.split(" ")) {
+    //names.push(word[0].toUpperCase() + word.slice(1));
+    names.push(word.replace(word[0], word[0].toUpperCase())); // the same result
+  }
+
+  console.log(names.join(" "));
+};
+
+capitalizeName("jessica ann smith davis"); // Jessica Ann Smith Davis
+capitalizeName("jonas schmedtmann"); // Jonas Schmedtmann
+
+// Padding
+const message = "Go to gate 23!";
+console.log(message.padStart(25, "+")); // +++++++++++Go to gate 23! - now length of the string is 25
+console.log("Jonas".padEnd(10, "-").padStart(15, "+-")); // +-+-+Jonas----- - now length of the string is 15
+
+const maskCreditCard = function (number) {
+  const str = number.toString();
+  const last = str.slice(-4);
+
+  console.log(last.padStart(str.length, "*"));
+};
+
+maskCreditCard(12366010); // ****6010
+maskCreditCard(4929462112366010); // ************6010
+maskCreditCard("5146056479740363"); // ************0363
+
+// Repeat
+const message2 = "Bad weather...";
+console.log(message2.repeat(3)); // Bad weather...Bad weather...Bad weather...
+
+const planesInLine = function (n) {
+  console.log(`There are ${n} planes in line ${":plane:".repeat(n)}`);
+};
+
+planesInLine(4); // There are 4 planes in line :plane::plane::plane::plane:
+
+ */
+
+/////////////////////////////////////////////////////////////
+// Coding Challenge #4
+// Write a program that receives a list of variable names written in underscore_case
+// and convert them to camelCase.
+// 	The input will come from a textarea inserted into the DOM (see code below to
+// insert the elements), and conversion will happen when the button is pressed.
+// 	Test data (pasted to textarea, including spaces):
+/*
+underscore_case
+first_name
+Some_Variable
+calculate_AGE
+delayed_departure
+*/
+// Should produce this output (5 separate console.log outputs):
+// underscoreCase      ✅
+// firstName           ✅✅
+// someVariable        ✅✅✅
+// calculateAge        ✅✅✅✅
+// delayedDeparture    ✅✅✅✅✅
+// Hints:
+// 	§  Remember which character defines a new line in the textarea ﾌ
+// §  The solution only needs to work for a variable made out of 2 words, like a_b
+// §  Start without worrying about the ✅. Tackle that only after you have the variable
+// name conversion working ﾌ
+// §  This challenge is difficult on purpose, so start watching the solution in case
+// you're stuck. Then pause and continue!
+//
+// Afterwards, test with your own test data!
+
+// Create elements
+const textArea = document.createElement("textarea");
+const btn = document.createElement("button");
+btn.textContent = "button";
+
+document.body.append(textArea, document.createElement("br"), btn);
+
+btn.addEventListener("click", () => {
+  const arrVariables = textArea.value.split("\n");
+
+  for (const [indexVariable, variable] of arrVariables.entries()) {
+    const variableNames = variable.trim().toLowerCase().split("_");
+
+    // for (let i = 1; i < variableNames.length; i++) {
+    // 	// the first name we don't touch
+    // 	variableNames[i] = variableNames[i].replace(
+    // 		variableNames[i][0],
+    // 		variableNames[i][0].toUpperCase()
+    // 	);
+    // }
+
+    for (const [indexName, name] of variableNames.entries()) {
+      // the first name we don't touch
+      if (indexName > 0)
+        variableNames[indexName] = name.replace(name[0], name[0].toUpperCase());
+    }
+
+    console.log(
+      variableNames.join("").padEnd(22, " "),
+      ":check:".repeat(indexVariable + 1)
+    );
+  }
+});
+
+// underscoreCase         :check:
+// firstName              :check::check:
+// someVariable           :check::check::check:
+// calculateAge           :check::check::check::check:
+// delayedDeparture       :check::check::check::check::check:
