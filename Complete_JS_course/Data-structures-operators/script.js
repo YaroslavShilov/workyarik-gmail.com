@@ -712,6 +712,7 @@ console.log("Jonasschmedtmann".length); // 16 - all letters
 
 //////////////////////////////////////////////////
 // Challenge #3
+/*
 const gameEvents = new Map([
   [17, "Goal"],
   [36, "Substitution"],
@@ -772,3 +773,46 @@ for (const [time, event] of gameEvents) {
   let halfType = time <= 45 ? "FIRST HALF" : "SECOND HALF";
   console.log(`[${halfType}] ${time}: ${event}`);
 }
+*/
+
+///////////////////////////////////////////////////////////
+// Working with strings
+const airline = "TAP Air Portugal";
+const plane = "A320";
+console.log(plane[0]); // A
+console.log("B737"[0]); // B
+console.log(airline.length); // 16
+console.log("B737".length); // 4
+
+console.log(airline.indexOf("r")); // 6
+console.log(airline.indexOf("A")); // 1 - the first
+
+console.log(airline.lastIndexOf("A")); // 4 - the first from the end;
+console.log(airline.lastIndexOf("hello")); // -1 - don't have this letters
+
+console.log(airline.slice(4)); // Air Portugal - slice from word[4] till the end
+console.log(airline.slice(-1)); // l - slice from word[word.length-1] till the end
+console.log(airline.slice(airline.length - 1)); // l - the same
+console.log(airline.slice(4, 7)); // Air - from index 4 till 7;
+
+console.log(airline.slice(0, airline.indexOf(" "))); // TAP - from first word till space;
+console.log(airline.slice(airline.lastIndexOf(" ") + 1)); // Portugal - from last space till the end
+// (+1 because we don't want see this space)
+
+console.log(airline.slice(1, -1)); // AP Air Portuga
+
+const checkMiddleSeat = function (seat) {
+  // B and E are middle seats;
+  const position = seat.slice(-1);
+  if (position === "B" || position === "E")
+    console.log("You got the middle seat :|");
+  else console.log("You got lucky :)");
+};
+
+checkMiddleSeat("11B"); // You got the middle seat :|
+checkMiddleSeat("23C"); // You got lucky :)
+checkMiddleSeat("3E"); // You got the middle seat :|
+
+console.log(new String("Jonas")); // {"Jonas"}
+console.log(typeof new String("Jonas")); // object
+console.log(typeof new String("Jonas").slice(1)); // string
