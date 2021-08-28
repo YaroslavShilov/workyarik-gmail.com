@@ -27,7 +27,7 @@ createBooking("LH123", undefined, 800); // {flightNum: "LH123", numPassengers: 2
 
 //////////////////////////////////////////
 // How Passing Arguments Works Value vs. Reference
-
+/*
 const flight = "LH234";
 const jonas = {
   name: "Jonas Schmedtmann",
@@ -48,3 +48,15 @@ const checkIn = function (flightNum, passenger) {
 checkIn(flight, jonas); // Checked in
 console.log(flight); // LH234 - not mutated
 console.log(jonas); // {name: "Mr. Jonas Schmedtmann", passport: 24739479284} - mutated
+*/
+
+/////////////////////////////////////////////
+// Functions Accepting Callback Functions
+const oneWord = function (str) {
+  return str.replace(/ /g, "").toLowerCase();
+};
+
+const upperFirstWord = function (str) {
+  const [first, ...others] = str.split(" ");
+  return [first.toUpperCase(), ...others].join(" ");
+};
