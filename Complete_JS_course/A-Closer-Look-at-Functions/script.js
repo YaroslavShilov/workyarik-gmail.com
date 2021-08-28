@@ -1,1 +1,50 @@
 "use strict";
+
+/////////////////////////////////////////////////////////////////////////
+// Default parameters
+/*
+const bookings = [];
+
+const createBooking = function (
+  flightNum,
+  numPassengers = 1,
+  price = 99 * numPassengers
+) {
+  const booking = {
+    flightNum,
+    numPassengers,
+    price,
+  };
+  console.table(booking);
+  bookings.push(booking);
+};
+
+createBooking("LH123"); // {flightNum: "LH123", numPassengers: 1, price: 99}
+createBooking("LH123", 2, 800); // {flightNum: "LH123", numPassengers: 2, price: 800}
+createBooking("LH123", 2); // {flightNum: "LH123", numPassengers: 2, price: 198}
+createBooking("LH123", undefined, 800); // {flightNum: "LH123", numPassengers: 2, price: 800}
+ */
+
+//////////////////////////////////////////
+// How Passing Arguments Works Value vs. Reference
+
+const flight = "LH234";
+const jonas = {
+  name: "Jonas Schmedtmann",
+  passport: 24739479284,
+};
+
+const checkIn = function (flightNum, passenger) {
+  flightNum = "LH999";
+  passenger.name = "Mr. " + passenger.name; // mutate because we get ref to obj, not obj;
+
+  if (passenger.passport === 24739479284) {
+    console.log("Checked in");
+  } else {
+    console.log("Wrong passport!");
+  }
+};
+
+checkIn(flight, jonas); // Checked in
+console.log(flight); // LH234 - not mutated
+console.log(jonas); // {name: "Mr. Jonas Schmedtmann", passport: 24739479284} - mutated
