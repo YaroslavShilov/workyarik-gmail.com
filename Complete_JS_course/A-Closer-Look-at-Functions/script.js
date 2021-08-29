@@ -52,6 +52,7 @@ console.log(jonas); // {name: "Mr. Jonas Schmedtmann", passport: 24739479284} - 
 
 /////////////////////////////////////////////
 // Functions Accepting Callback Functions
+/*
 const oneWord = function (str) {
   return str.replace(/ /g, "").toLowerCase();
 };
@@ -79,3 +80,21 @@ document.body.style.backgroundColor = "tomato";
 document.body.addEventListener("click", high5);
 
 ["Jonas", "Martha", "Adam"].forEach((name) => high5(name));
+*/
+
+const greet = function (greeting) {
+  return function (name) {
+    console.log(`${greeting} ${name}`);
+  };
+};
+
+const greeterHey = greet("Hey");
+greeterHey("Jonas");
+greeterHey("Steven");
+
+greet("Hello")("Jonas");
+
+const arrowGreet = (greeting) => (name) => console.log(`${greeting} ${name}`);
+const greeterHello = arrowGreet("Hello");
+greeterHello("Maxim");
+greeterHello("Steven");
