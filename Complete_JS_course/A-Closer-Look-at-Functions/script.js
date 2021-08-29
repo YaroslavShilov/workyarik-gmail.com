@@ -60,3 +60,22 @@ const upperFirstWord = function (str) {
   const [first, ...others] = str.split(" ");
   return [first.toUpperCase(), ...others].join(" ");
 };
+
+// Higher-order function
+const transformer = function (str, fn) {
+  console.log(`string: ${fn(str)}`);
+  console.log(`by: ${fn.name}`);
+};
+
+transformer("JavaScript is the best!", upperFirstWord); // string: JAVASCRIPT is the best!; by: upperFirstWord
+transformer("JavaScript is the best!", oneWord); // string: javascriptisthebest!; by: oneWord
+
+const high5 = function (name = "") {
+  console.log(":hello: " + name);
+};
+
+document.body.style.height = "200px";
+document.body.style.backgroundColor = "tomato";
+document.body.addEventListener("click", high5);
+
+["Jonas", "Martha", "Adam"].forEach((name) => high5(name));
