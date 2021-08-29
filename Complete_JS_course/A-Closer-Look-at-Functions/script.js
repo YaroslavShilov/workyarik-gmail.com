@@ -80,7 +80,6 @@ document.body.style.backgroundColor = "tomato";
 document.body.addEventListener("click", high5);
 
 ["Jonas", "Martha", "Adam"].forEach((name) => high5(name));
-*/
 
 const greet = function (greeting) {
   return function (name) {
@@ -98,3 +97,54 @@ const arrowGreet = (greeting) => (name) => console.log(`${greeting} ${name}`);
 const greeterHello = arrowGreet("Hello");
 greeterHello("Maxim");
 greeterHello("Steven");
+*/
+
+///////////////////////////////////////////////////////
+// The call and apply Methods
+const lufthansa = {
+  airline: "Lufthansa",
+  iataCode: "LH",
+  bookings: [],
+  // book: function() {}
+  book(flightNum, name) {
+    console.log(
+      `${name} booked a seat on ${this.airline} flight ${this.iataCode}${flightNum}`
+    );
+    this.bookings.push({ flight: `${this.iataCode}${flightNum}`, name });
+  },
+};
+
+lufthansa.book(239, "Jonas Schmedtmann"); // Jonas Schmedtmann booked a seat on Lufthansa flight LH239
+lufthansa.book(635, "John Smith"); // John Smith booked a seat on Lufthansa flight LH635
+console.log(lufthansa.bookings); // [{flight: "LH239", name: "Jonas Schmedtmann"}, {flight: "LH635", name: "John Smith"}]
+
+const eurowings = {
+  airline: "Eurowings",
+  iataCode: "EW",
+  bookings: [],
+};
+
+const book = lufthansa.book;
+// book(23, "Sarah Williams"); // TypeError: Cannot read property 'airline' of undefined
+
+// Call method
+book.call(eurowings, 23, "Hello"); // Hello booked a seat on Eurowings flight EW23
+book.call(lufthansa, 12, "Hello"); // Hello booked a seat on Lufthansa flight LH12
+
+const book2 = lufthansa.book.bind(eurowings);
+book2(23, "Sarah Williams"); // Sarah Williams booked a seat on Eurowings flight EW23
+
+const swiss = {
+  airline: "Swiss Air Lines",
+  iataCode: "LX",
+  bookings: [],
+};
+
+book.call(swiss, 583, "Mary Cooper"); // Mary Cooper booked a seat on Swiss Air Lines flight LX583
+
+// Apply method - don't use in JS anymore
+const flightData = [583, "George Cooper"];
+book.apply(swiss, flightData); // George Cooper booked a seat on Swiss Air Lines flight LX583
+
+// apply - don't use because call is the same
+book.call(swiss, ...flightData); // George Cooper booked a seat on Swiss Air Lines flight LX583
