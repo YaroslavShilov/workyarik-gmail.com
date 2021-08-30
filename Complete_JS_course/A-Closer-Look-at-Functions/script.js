@@ -148,3 +148,45 @@ book.apply(swiss, flightData); // George Cooper booked a seat on Swiss Air Lines
 
 // apply - don't use because call is the same
 book.call(swiss, ...flightData); // George Cooper booked a seat on Swiss Air Lines flight LX583
+
+// Bind method
+const bookEW = book.bind(eurowings);
+const bookLH = book.bind(lufthansa);
+const bookLX = book.bind(swiss);
+bookEW(23, "Steven Williams"); // Steven Williams booked a seat on Eurowings flight EW23
+
+const bookEW23 = book.bind(eurowings, 2000); // set the first parameter of this function
+// now we don't need to set the first parameter
+bookEW23("Jonas Schmedtmann"); // Jonas Schmedtmann booked a seat on Eurowings flight EW2000
+bookEW23("Martha Cooper"); // Martha Cooper booked a seat on Eurowings flight EW2000
+
+// With Event Listeners
+lufthansa.planes = 300;
+lufthansa.buyPlane = function () {
+  console.log(this);
+  this.planes++;
+  console.log(this.planes);
+};
+// lufthansa.buyPlane();
+
+document
+  .querySelector(".buy")
+  .addEventListener("click", lufthansa.buyPlane.bind(lufthansa));
+// {airline: "Lufthansa", iataCode: "LH", bookings: Array(3), planes: 300, book: …}
+// 301
+
+// Partial application
+const addTax = (rate, value) => value + value * rate;
+console.log(addTax(0.1, 200)); // 220
+
+// all time use the same the first parameter
+const addNDS = addTax.bind(null, 0.2);
+// addNDS = value => value + value * 0.20
+
+console.log(addNDS(100)); // 120;
+console.log(addNDS(23)); // 27.6
+
+// the same code using Higher-order function
+const addNDS2 = (value) => addTax(0.2, value);
+console.log(addNDS2(100)); // 120;
+console.log(addNDS2(23)); // 27.6
