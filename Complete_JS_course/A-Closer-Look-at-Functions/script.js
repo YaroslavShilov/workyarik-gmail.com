@@ -273,3 +273,27 @@ poll.displayResults.call({ answers: [1, 5, 3, 9, 6, 1] });
 
 console.log("END BONUS");
 */
+
+const runOnce = function () {
+  console.log("This will never run again");
+};
+
+runOnce();
+
+// IIFE
+(() => {
+  console.log("This will never run again");
+  const isPrivate = 23;
+  var notPrivate = 46;
+})();
+
+// console.log(isPrivate); // doesn't work
+// console.log(notPrivate); // doesn't work
+
+{
+  const isPrivate = 23;
+  var notPrivate2 = 46;
+}
+
+// console.log(isPrivate); // doesn't work
+console.log(notPrivate2); // work
