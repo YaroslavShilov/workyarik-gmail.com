@@ -274,6 +274,7 @@ poll.displayResults.call({ answers: [1, 5, 3, 9, 6, 1] });
 console.log("END BONUS");
 */
 
+/*
 const runOnce = function () {
   console.log("This will never run again");
 };
@@ -297,3 +298,37 @@ runOnce();
 
 // console.log(isPrivate); // doesn't work
 console.log(notPrivate2); // work
+
+const arrs = (name) => {
+  console.log("hello");
+};
+
+function hello(test) {
+  console.log("hello2");
+}
+
+function hell2(test) {
+  console.log(test);
+}
+
+runOnce();
+*/
+
+const secureBooking = function () {
+  let passengerCount = 0;
+
+  function test() {
+    console.log("from test: ", passengerCount);
+  }
+  return function () {
+    passengerCount++;
+    console.log(`${passengerCount} passengers`);
+    test();
+  };
+};
+
+const booker = secureBooking();
+booker(); // 1 passengers
+booker(); // 2 passengers
+booker(); // 3 passengers
+console.dir(booker);
