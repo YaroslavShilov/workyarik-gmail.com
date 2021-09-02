@@ -73,8 +73,54 @@ const currencies = new Map([
 
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
-/////////////////////////////////////////////////
+// forEach
+for (const movement of movements) {
+  if (movement > 0) console.log(`deposited: ${movement}`);
+  else console.log(`withdrew: ${Math.abs(movement)}`); // .abs - returns the absolute value of a number - remove "-"
+  // result:
+  // deposited: 200
+  // deposited: 450
+  // withdrew: 400
+  // deposited: 3000
+  // withdrew: 650
+  // withdrew: 130
+  // deposited: 70
+  // deposited: 1300
+}
 
+for (const [index, movement] of movements.entries()) {
+  // the same like .forEach method
+  console.log(`${index}: ${movement}`); // result:
+  // result:
+  // 0: 200
+  // 1: 450
+  // 2: -400
+  // 3: 3000
+  // 4: -650
+  // 5: -130
+  // 6: 70
+  // 7: 1300
+}
+
+movements.forEach((movement, index, array) => {
+  // array - is array which we use (movements)
+  // array.push(0); - mutate the original array
+  console.log(`${index}: ${movement}`);
+  // result:
+  // 0: 200
+  // 1: 450
+  // 2: -400
+  // 3: 3000
+  // 4: -650
+  // 5: -130
+  // 6: 70
+  // 7: 1300
+});
+console.log(movements);
+
+/////////////////////////////////////////////////
+// Simple Array Methods
+/*
 let arr = ["a", "b", "c", "d", "e"];
 
 // SLICE - return a new array (copy)
@@ -107,3 +153,4 @@ console.log([...arr, ...arr2]); // ["a", "b", "c", "d", "e", "f", "g", "h", "i",
 // JOIN - don't mutate
 console.log(letters.join("-")); // a-b-c-d-e-f-g-h-i-j
 console.log(letters); // ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"]
+*/
