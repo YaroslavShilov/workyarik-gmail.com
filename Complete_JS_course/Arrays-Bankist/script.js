@@ -61,19 +61,18 @@ const inputLoanAmount = document.querySelector(".form__input--loan-amount");
 const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
 
+
+
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
 
-const currencies = new Map([
-  ["USD", "United States dollar"],
-  ["EUR", "Euro"],
-  ["GBP", "Pound sterling"],
-]);
-
+////////////////////////////////////////////////////////////
+// forEach
+/*
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
-// forEach
 for (const movement of movements) {
   if (movement > 0) console.log(`deposited: ${movement}`);
   else console.log(`withdrew: ${Math.abs(movement)}`); // .abs - returns the absolute value of a number - remove "-"
@@ -117,6 +116,60 @@ movements.forEach((movement, index, array) => {
   // 7: 1300
 });
 console.log(movements);
+
+console.log("----------MAPS---------");
+
+// forEach with Maps and Sets
+// Maps
+const currencies = new Map([
+  ["USD", "United States dollar"], // [key, value]
+  ["EUR", "Euro"],
+  ["GBP", "Pound sterling"],
+]);
+
+currencies.forEach((value, key, map) => {
+  console.log(`value: `, value);
+  console.log(`key: `, key);
+  console.log(`map: `, map);
+  console.log("");
+
+  // result:
+  // value:  United States dollar
+  // key:  USD
+  // map:  Map(3){"USD" => "United States dollar", "EUR" => "Euro", "GBP" => "Pound sterling"}
+  //
+  // value:  Euro
+  // key:  EUR
+  // map:  Map(3){"USD" => "United States dollar", "EUR" => "Euro", "GBP" => "Pound sterling"}
+  //
+  // value:  Pound sterling
+  // key:  GBP
+  // map:  Map(3){"USD" => "United States dollar", "EUR" => "Euro", "GBP" => "Pound sterling"}
+});
+
+// Set
+const currenciesArr = ["USD", "GBP", "USD", "EUR", "EUR"];
+const currenciesUnique = new Set(currenciesArr); // take only unique - don't mutate
+console.log(currenciesUnique); // {"USD", "GBP", "EUR"}
+console.log(currenciesArr); // ["USD", "GBP", "USD", "EUR", "EUR"]
+
+currenciesUnique.forEach((value, key, map) => {
+  console.log(`${key}: ${value}`);
+  console.log(`map: `, map);
+  console.log("");
+  // result
+  // USD: USD
+  // map:  Set(3){"USD", "GBP", "EUR"}
+  //
+  // GBP: GBP
+  // map:  Set(3){"USD", "GBP", "EUR"}
+  //
+  // EUR: EUR
+  // map:  Set(3){"USD", "GBP", "EUR"}
+  // Sets - doesn't have keys and index, that's why we have the same value and key
+  // WRITE "_" instead "key"
+});
+ */
 
 /////////////////////////////////////////////////
 // Simple Array Methods
