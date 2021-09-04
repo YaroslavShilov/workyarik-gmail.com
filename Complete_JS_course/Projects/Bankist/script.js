@@ -76,7 +76,10 @@ const displayMovements = function (movements) {
   });
 };
 
-displayMovements(account1.movements);
+const calcDisplayBalance = (movements) => {
+  const balance = movements.reduce((acc, mov) => acc + mov);
+  labelBalance.textContent = `${balance} USD`;
+};
 
 const createUsernames = (accounts) => {
   accounts.forEach((acc) => {
@@ -88,5 +91,17 @@ const createUsernames = (accounts) => {
   });
 };
 
+displayMovements(account1.movements);
+
 createUsernames(accounts);
-console.log(accounts);
+
+calcDisplayBalance(account1.movements);
+
+// Maximum value
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+console.log(
+  movements.reduce((acc, current) => {
+    if (current > acc) acc = current;
+    return acc;
+  })
+); // 3000
