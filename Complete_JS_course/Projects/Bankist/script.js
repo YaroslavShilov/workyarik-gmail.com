@@ -91,29 +91,33 @@ const createUsernames = (accounts) => {
   });
 };
 
-displayMovements(account1.movements);
+const calcDisplaySummary = (movements) => {
+  labelSumIn.textContent =
+    movements.filter((mov) => mov > 0).reduce((acc, mov) => acc + mov) + "$";
 
-createUsernames(accounts);
+  labelSumOut.textContent =
+    Math.abs(
+      movements.filter((mov) => mov < 0).reduce((acc, mov) => acc + mov)
+    ) + "$";
 
-calcDisplayBalance(account1.movements);
-
-// Maximum value
-const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
-console.log(
-  movements.reduce((acc, current) => {
-    if (current > acc) acc = current;
-    return acc;
-  })
-); // 3000
-
-const calcAverageHumanAge = (ages) => {
-  const humanAges = ages.map((age) => (age <= 2 ? 2 * age : 16 + age * 4));
-  const adults = humanAges.filter((age) => age >= 18);
-  return adults.reduce((acc, age) => acc + age) / adults.length;
+  labelSumInterest.textContent =
+    movements
+      .filter((mov) => mov > 0)
+      .map((deposit) => (deposit * 1.2) / 100)
+      .filter((int) => int >= 1)
+      .reduce((acc, int) => acc + int) + "$";
 };
 
-const test1 = [5, 2, 4, 1, 15, 8, 3];
-const test2 = [16, 6, 10, 5, 6, 1, 4];
+displayMovements(account1.movements);
+createUsernames(accounts);
+calcDisplayBalance(account1.movements);
+calcDisplaySummary(account1.movements);
 
-console.log(calcAverageHumanAge(test1));
-console.log(calcAverageHumanAge(test2));
+// test
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+const eurToUsd = 1.1;
+const totalDepositsUSD = movements
+  .filter((mov) => mov > 0)
+  .map((mov) => mov * eurToUsd)
+  .reduce((acc, mov) => acc + mov);
+console.log(totalDepositsUSD);
