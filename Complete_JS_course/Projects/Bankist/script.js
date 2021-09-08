@@ -220,12 +220,28 @@ btnClose.addEventListener("click", (e) => {
 // test
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
-// EVERY
-console.log(movements.every((mov) => mov > 0)); // false - because not every items > 0
-console.log([100, 50, 30].every((mov) => mov > 0)); // true - because every items > 0
+// Float
+const arr = [[1, 2, 3], [4, 5, 6], 7, 8];
+console.log(arr.flat()); // [1, 2, 3, 4, 5, 6, 7, 8] - 1 is default depth
 
-// Separate callback
-const deposit = (mov) => mov > 0;
-console.log(movements.some(deposit)); // true
-console.log(movements.every(deposit)); // false
-console.log(movements.filter(deposit)); // [200, 450, 3000, 70, 1300];
+const arrDeep = [[[1, 2], 3], [4, [5, 6]], 7, 8];
+console.log(arrDeep.flat(1)); // [[1, 2], 3, 4, [5, 6], 7, 8] - we can don't write 1 (1 is default)
+console.log(arrDeep.flat(2)); // [1, 2, 3, 4, 5, 6, 7, 8]
+
+// FlatMap
+const accounts2 = [
+  { movements: [1, 2, 3, 4, 5] }, // sum is 15
+  { movements: [1, 2, 3, 4, 5] }, // sum is 15
+  { movements: [1, 2, 3, 4, 5] }, // sum is 15
+  { movements: [1, 2, 3, 4, 5] }, // sum is 15
+];
+const accountMovementsWRONG = accounts2
+  .map((acc) => acc.movements) // [[nums...], [nums...]...]
+  .flat() // [nums....]
+  .reduce((acc, curr) => acc + curr, 0);
+console.log(accountMovementsWRONG); // 60
+
+const accountMovementsRight = accounts2
+  .flatMap((acc) => acc.movements) // [nums....] - first map, then flat
+  .reduce((acc, curr) => acc + curr, 0);
+console.log(accountMovementsRight); // 60
