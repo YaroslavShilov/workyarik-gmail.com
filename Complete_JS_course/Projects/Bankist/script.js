@@ -69,10 +69,12 @@ const createUsernames = (accounts) => {
 
 createUsernames(accounts);
 
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sort = false) {
   containerMovements.innerHTML = "";
 
-  movements.forEach((mov, i) => {
+  const movs = sort ? [...movements].sort((a, b) => a - b) : movements;
+
+  movs.forEach((mov, i) => {
     const type = mov > 0 ? "deposit" : "withdrawal";
 
     const html = `
@@ -216,32 +218,64 @@ btnClose.addEventListener("click", (e) => {
   }
 });
 
+let sortState = false;
+
+btnSort.addEventListener("click", (e) => {
+  e.preventDefault();
+  sortState = !sortState;
+  displayMovements(currentAccount.movements, sortState);
+});
+
 ///////////////////////////////////////////////////////////////////////
 // test
+
+// Sort - mutate
+// Strings
+const owners = ["Jonas", "Zach", "Adam", "Martha"];
+console.log(owners.sort()); // ['Adam', 'Jonas', 'Martha', 'Zach'] - sort like a string
+console.log(owners); // ['Adam', 'Jonas', 'Martha', 'Zach'] - mutated
+
+// Numbers
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+console.log(movements.sort()); // [-130, -400, -650, 1300, 200, 3000, 450, 70] - sort like a string
 
-// Float
-const arr = [[1, 2, 3], [4, 5, 6], 7, 8];
-console.log(arr.flat()); // [1, 2, 3, 4, 5, 6, 7, 8] - 1 is default depth
+// Ascending
+console.log(
+  movements.sort((a, b) => {
+    // a - current value, b - next value
 
-const arrDeep = [[[1, 2], 3], [4, [5, 6]], 7, 8];
-console.log(arrDeep.flat(1)); // [[1, 2], 3, 4, [5, 6], 7, 8] - we can don't write 1 (1 is default)
-console.log(arrDeep.flat(2)); // [1, 2, 3, 4, 5, 6, 7, 8]
+    // return < 0, result: A, B
+    // return > 0, result: B, A
+    /*
+   for example:
+   we have [450, -400, -300] and we want result [-400, -300, 400]
 
-// FlatMap
-const accounts2 = [
-  { movements: [1, 2, 3, 4, 5] }, // sum is 15
-  { movements: [1, 2, 3, 4, 5] }, // sum is 15
-  { movements: [1, 2, 3, 4, 5] }, // sum is 15
-  { movements: [1, 2, 3, 4, 5] }, // sum is 15
-];
-const accountMovementsWRONG = accounts2
-  .map((acc) => acc.movements) // [[nums...], [nums...]...]
-  .flat() // [nums....]
-  .reduce((acc, curr) => acc + curr, 0);
-console.log(accountMovementsWRONG); // 60
+   a = 450
+   b = -400
+   return a > b ? 1 : -1; // return > 0, result: B, A [-400, 450, -300]
 
-const accountMovementsRight = accounts2
-  .flatMap((acc) => acc.movements) // [nums....] - first map, then flat
-  .reduce((acc, curr) => acc + curr, 0);
-console.log(accountMovementsRight); // 60
+   next circle (will do circles while every if else will be ok)
+   a = 450
+   b = -300
+   if(a > b) return 1; // return > 0, result: B, A [-400, -300, 450]
+   
+   next circle (will do circles while every if else will be ok)
+   a = -400
+   b = -300
+   return a > b ? 1 : -1; // return < 0, result: A, B [-400, -300, 450]
+
+   finish: [-400, -300, 450]
+  */
+    return a > b ? 1 : -1;
+  })
+); // [-650, -400, -130, 70, 200, 450, 1300, 3000] - sorted like numbers
+
+// THE SAME Ascending
+// if a > b the result will be positive number (400 - 300 = 100 return > 0, result: B, A)
+console.log(movements.sort((a, b) => a - b)); // [-650, -400, -130, 70, 200, 450, 1300, 3000]
+
+// Descending
+console.log(movements.sort((a, b) => (a > b ? -1 : 1))); // [3000, 1300, 450, 200, 70, -130, -400, -650]
+// THE SAME Descending
+// if a < b the result will be negative number (300 - 400) = -100 return < 0, result: A, B)
+console.log(movements.sort((a, b) => b - a)); // [3000, 1300, 450, 200, 70, -130, -400, -650]
