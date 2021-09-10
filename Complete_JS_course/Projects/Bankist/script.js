@@ -229,53 +229,58 @@ btnSort.addEventListener("click", (e) => {
 ///////////////////////////////////////////////////////////////////////
 // test
 
-// Sort - mutate
-// Strings
-const owners = ["Jonas", "Zach", "Adam", "Martha"];
-console.log(owners.sort()); // ['Adam', 'Jonas', 'Martha', 'Zach'] - sort like a string
-console.log(owners); // ['Adam', 'Jonas', 'Martha', 'Zach'] - mutated
+console.log([1, 2, 3, 4, 5, 6, 7]); // [1, 2, 3, 4, 5, 6, 7]
+console.log(new Array(1, 2, 3, 4, 5, 6, 7)); // [1, 2, 3, 4, 5, 6, 7]
 
-// Numbers
-const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
-console.log(movements.sort()); // [-130, -400, -650, 1300, 200, 3000, 450, 70] - sort like a string
+// Array.fill - mutate original array
+const x = new Array(7);
+console.log(x); // [empty x 7]
+console.log(x.map(() => 5)); // [empty x 7]
+console.log(x.fill(1)); // [1, 1, 1, 1, 1, 1, 1] - mutate original array
+console.log(x.fill(2, 3)); // [1, 1, 1, 2, 2, 2, 2] - 3 is start index
+console.log(x.fill(5, 4, 6)); // [1, 1, 1, 2, 5, 5, 2] - 4 is start index, 6 is end index (don't include)
 
-// Ascending
-console.log(
-  movements.sort((a, b) => {
-    // a - current value, b - next value
+// Array.from
+const y = Array.from({ length: 7 }, () => 1);
+console.log(y); // [1, 1, 1, 1, 1, 1, 1]
 
-    // return < 0, result: A, B
-    // return > 0, result: B, A
-    /*
-   for example:
-   we have [450, -400, -300] and we want result [-400, -300, 400]
+const z = Array.from({ length: 7 }, (curr, i) => i + 1); // like map method
+console.log(z); // [1, 2, 3, 4, 5, 6, 7]
 
-   a = 450
-   b = -400
-   return a > b ? 1 : -1; // return > 0, result: B, A [-400, 450, -300]
+const z2 = Array.from({ length: 7 }, (_, i) => i + 1); // _ means "we don't want to use"
+console.log(z2); // [1, 2, 3, 4, 5, 6, 7]
 
-   next circle (will do circles while every if else will be ok)
-   a = 450
-   b = -300
-   if(a > b) return 1; // return > 0, result: B, A [-400, -300, 450]
-   
-   next circle (will do circles while every if else will be ok)
-   a = -400
-   b = -300
-   return a > b ? 1 : -1; // return < 0, result: A, B [-400, -300, 450]
+const hundred = Array.from({ length: 100 }, (_, i) => 1 + i);
+console.log(hundred); // array [from 1 till 100], [1,2,3,4,5,6,7....100]
 
-   finish: [-400, -300, 450]
-  */
-    return a > b ? 1 : -1;
-  })
-); // [-650, -400, -130, 70, 200, 450, 1300, 3000] - sorted like numbers
+const movementsUI = Array.from(document.querySelectorAll(".movements__value"));
+console.log(movementsUI); // [div.movements__value, div.movements__value]
 
-// THE SAME Ascending
-// if a > b the result will be positive number (400 - 300 = 100 return > 0, result: B, A)
-console.log(movements.sort((a, b) => a - b)); // [-650, -400, -130, 70, 200, 450, 1300, 3000]
+labelBalance.addEventListener("click", () => {
+  // Get numbers from HTML elements
 
-// Descending
-console.log(movements.sort((a, b) => (a > b ? -1 : 1))); // [3000, 1300, 450, 200, 70, -130, -400, -650]
-// THE SAME Descending
-// if a < b the result will be negative number (300 - 400) = -100 return < 0, result: A, B)
-console.log(movements.sort((a, b) => b - a)); // [3000, 1300, 450, 200, 70, -130, -400, -650]
+  // we get: ['1300$', '70$', '-130$', '-650$', '3000$', '-400$', '450$', '200$']
+  // we want numbers: [1300, 70, -130, -650, 3000, -400, 450, 200]
+  // The wrong way:
+  const movementsUIWrong = Array.from(
+    document.querySelectorAll(".movements__value")
+  );
+  console.log(
+    movementsUIWrong.map((el) => Number(el.textContent.replace("$", "")))
+  ); // [1300, 70, -130, -650, 3000, -400, 450, 200]
+
+  // The second wrong way:
+  const movementsUISecond = [
+    ...document.querySelectorAll(".movements__value"),
+  ].map((val) => Number(val.textContent.replace("$", "")));
+
+  console.log(movementsUISecond); // [1300, 70, -130, -650, 3000, -400, 450, 200]
+
+  // The right way:
+  // Get Html elements and set the second parameter for changes
+  const movementsUI = Array.from(
+    document.querySelectorAll(".movements__value"),
+    (el) => Number(el.textContent.replace("$", "")) // use map func at the same time
+  );
+  console.log(movementsUI); // [1300, 70, -130, -650, 3000, -400, 450, 200]
+});
