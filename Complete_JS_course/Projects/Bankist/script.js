@@ -227,4 +227,51 @@ btnSort.addEventListener("click", (e) => {
 });
 
 ///////////////////////////////////////////////////////////////////////
-// test
+// Coding Challenge #4
+
+const dogs = [
+  { weight: 22, curFood: 250, owners: ["Alice", "Bob"] },
+  { weight: 8, curFood: 200, owners: ["Matilda"] },
+  { weight: 13, curFood: 275, owners: ["Sarah", "John"] },
+  { weight: 32, curFood: 340, owners: ["Michael"] },
+];
+
+// Use slice for copy
+const dogsSortedByWeight = dogs.slice().sort((a, b) => a.weight - b.weight);
+console.log(dogsSortedByWeight);
+// result:
+// {weight: 8, curFood: 200, owners: Array(1), recFood: 133}
+// {weight: 13, curFood: 275, owners: Array(2), recFood: 191}
+// {weight: 22, curFood: 250, owners: Array(2), recFood: 284}
+// {weight: 32, curFood: 340, owners: Array(1), recFood: 376}
+console.log(dogs); // doesn't mutated
+
+// The same result
+const dogsSortedByWeight2 = [...dogs].sort((a, b) => a.weight - b.weight);
+console.log(dogsSortedByWeight);
+// result:
+// {weight: 8, curFood: 200, owners: Array(1), recFood: 133}
+// {weight: 13, curFood: 275, owners: Array(2), recFood: 191}
+// {weight: 22, curFood: 250, owners: Array(2), recFood: 284}
+console.log(dogs); // doesn't mutated
+
+dogs.forEach((dog) => (dog.recFood = Math.trunc(dog.weight ** 0.75 * 28)));
+
+const dogSarah = dogs.find(({ owners }) => owners.includes("Sarah"));
+console.log(
+  `Sarah's dog is eating ${
+    dogSarah.curFood > dogSarah.recFood ? "much" : "little"
+  }`
+);
+
+const ownersEatTooMuch = dogs
+  .filter((dog) => dog.curFood > dog.recFood)
+  .flatMap(({ owners }) => owners);
+console.log(`${ownersEatTooMuch.join(", ")}'s dogs eat too much`);
+
+const ownersEatTooLittle = dogs
+  .filter((dog) => dog.curFood < dog.recFood)
+  .flatMap(({ owners }) => owners);
+console.log(`${ownersEatTooLittle.join(", ")}'s dogs eat too little`);
+
+console.log(dogs.some((dog) => dog.curFood === dog.recFood));
