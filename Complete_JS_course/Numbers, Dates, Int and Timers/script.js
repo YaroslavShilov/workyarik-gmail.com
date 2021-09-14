@@ -81,19 +81,38 @@ const inputClosePin = document.querySelector(".form__input--pin");
 /////////////////////////////////////////////////
 // Functions
 
-const displayMovements = function (movements, sort = false) {
+const displayMovements = function (acc, sort = false) {
+  const { movements, movementsDates } = acc;
   containerMovements.innerHTML = "";
 
-  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  console.log("start: ", movements);
+  let movs = movements.map((mov, i) => ({ mov, date: movementsDates[i] }));
 
-  movs.forEach(function (mov, i) {
+  console.log("movs: ", movs);
+
+  movs = sort ? movs.sort((a, b) => a.mov - b.mov) : movs;
+
+  console.log("after: ", movs);
+
+  movs.forEach(function ({ mov, date }, i) {
     const type = mov > 0 ? "deposit" : "withdrawal";
+
+    const day = new Date(date);
+
+    const dateState = {
+      date: `${day.getDate()}`.padStart(2, "0"),
+      month: `${day.getMonth() + 1}`.padStart(2, "0"), // because start from 0
+      year: day.getFullYear(),
+    };
+
+    const displayDate = `${dateState.date}/${dateState.month}/${dateState.year}`;
 
     const html = `
       <div class="movements__row">
         <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type}</div>
+        <div class="movements__date">${displayDate}</div>
         <div class="movements__value">${mov.toFixed(2)}€</div>
       </div>
     `;
@@ -142,7 +161,7 @@ createUsernames(accounts);
 
 const updateUI = function (acc) {
   // Display movements
-  displayMovements(acc.movements);
+  displayMovements(acc);
 
   // Display balance
   calcDisplayBalance(acc);
@@ -154,6 +173,21 @@ const updateUI = function (acc) {
 ///////////////////////////////////////
 // Event handlers
 let currentAccount;
+
+// FAKE ALWAYS LOGGED IN
+currentAccount = account1;
+updateUI(currentAccount);
+containerApp.style.opacity = 1;
+
+const now = new Date();
+const date = `${now.getDate()}`.padStart(2, "0");
+const month = `${now.getMonth() + 1}`.padStart(2, "0"); // because start from 0
+const year = now.getFullYear();
+const hour = now.getHours();
+const min = now.getMinutes();
+labelDate.textContent = `${date}/${month}/${year}, ${hour}:${min}`;
+
+// day/month/year
 
 btnLogin.addEventListener("click", function (e) {
   // Prevent form from submitting
@@ -198,6 +232,10 @@ btnTransfer.addEventListener("click", function (e) {
     currentAccount.movements.push(-amount);
     receiverAcc.movements.push(amount);
 
+    // Add transfer date
+    currentAccount.movementsDates.push(new Date().toISOString());
+    receiverAcc.movementsDates.push(new Date().toISOString());
+
     // Update UI
     updateUI(currentAccount);
   }
@@ -214,6 +252,9 @@ btnLoan.addEventListener("click", function (e) {
   ) {
     // Add movement
     currentAccount.movements.push(amount);
+
+    // Add loan date
+    currentAccount.movementsDates.push(new Date().toISOString());
 
     // Update UI
     updateUI(currentAccount);
@@ -247,44 +288,10 @@ btnClose.addEventListener("click", function (e) {
 let sorted = false;
 btnSort.addEventListener("click", function (e) {
   e.preventDefault();
-  displayMovements(currentAccount.movements, !sorted);
+  displayMovements(currentAccount, !sorted);
   sorted = !sorted;
 });
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
-
-// Create a date
-console.log(new Date()); // Tue Sep 14 2021 09:29:26 GMT+0300 (Moscow Standard Time)
-console.log(new Date("Sep 13 2021 09:29:26")); // Mon Sep 13 2021 09:29:26 GMT+0300 (Moscow Standard Time)
-console.log(new Date("December 24, 2015")); // Thu Dec 24 2015 00:00:00 GMT+0300 (Moscow Standard Time)
-
-console.log(account1.movementsDates[0]); // 2019-11-18T21:31:17.178Z
-console.log(new Date(account1.movementsDates[0])); // Tue Nov 19 2019 00:31:17 GMT+0300 (Moscow Standard Time)
-
-console.log(new Date(2037, 10, 19, 15, 23, 5)); // Thu Nov 19 2037 15:23:05 GMT+0300 (Moscow Standard Time)
-console.log(new Date(2037, 0, 19, 15, 23, 5)); // Mon Jan 19 2037 15:23:05 GMT+0300 (Moscow Standard Time)
-console.log(new Date(2037, 0, 50, 15, 23, 5)); // 31Jan + 19 = 19Feb - Thu Feb 19 2037 15:23:05 GMT+0300 (Moscow Standard Time)
-
-console.log(new Date(0)); // Thu Jan 01 1970 03:00:00 GMT+0300 (Moscow Standard Time)
-console.log(new Date(3 * 24 * 60 * 60 * 1000)); //(3 days) - Sun Jan 04 1970 03:00:00 GMT+0300 (Moscow Standard Time)
-
-// Working with dates
-const future = new Date(2037, 10, 19, 15, 23);
-console.log(future); // Thu Nov 19 2037 15:23:00 GMT+0300 (Moscow Standard Time)
-console.log(future.getFullYear()); // 2037
-console.log(future.getMonth()); // 10 - November because start from 0
-console.log(future.getDate()); // 19
-console.log(future.getDay()); // 4 - day of the week (Thursday)
-console.log(future.getHours()); // 15
-console.log(future.getMinutes()); // 23
-console.log(future.getSeconds()); // 0
-console.log(future.toISOString()); // 2037-11-19T12:23:00.000Z
-console.log(future.getTime()); // 2142246180000 - from Thu Jan 01 1970 03:00:00 GMT+0300 (Moscow Standard Time) till "future"
-console.log(new Date(2142246180000)); // Thu Nov 19 2037 15:23:00 GMT+0300 (Moscow Standard Time)
-
-console.log(Date.now()); // 1631602011920 - from Thu Jan 01 1970 03:00:00 GMT+0300 (Moscow Standard Time) till "now"
-
-future.setFullYear(2040);
-console.log(future); // Mon Nov 19 2040 15:23:00 GMT+0300 (Moscow Standard Time)
