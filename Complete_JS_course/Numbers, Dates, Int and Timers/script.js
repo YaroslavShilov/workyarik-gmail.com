@@ -255,27 +255,38 @@ btnSort.addEventListener("click", function (e) {
 /////////////////////////////////////////////////
 // LECTURES
 
-// Remainder operator
-console.log(5 % 2); // 1 - remainder of a division
-console.log(5 / 2); // 2.5 ( 5 = 2 * 2 + 1 ) - division (1 is remainder)
+// BigInt
+console.log(2 ** 53 - 1); // 9007199254740991
+console.log(Number.MAX_SAFE_INTEGER); // 9007199254740991
+console.log(2 ** 53 + 0); // 9007199254740992 - bigger because isn't save
+console.log(2 ** 53 + 1); // 9007199254740992 - the same because isn't save
+console.log(2 ** 53 + 2); // 9007199254740994 - because isn't save
+// use BigInt for that
 
-console.log(8 % 3); // 2
-console.log(8 / 3); // 2.6666 => 8 = 2 * 3 + 2
+console.log(123123123123123123123123123123123); // 1.2312312312312312e+32
+console.log(123123123123123123123123123123123n); // 123123123123123123123123123123123n - bigInt number
+console.log(BigInt(123123123123123123123123123123123)); // 123123123123123119722110449090560n - bigInt number
 
-console.log(6 % 2); // 0
-console.log(6 / 2); // 3 => 6 = 2 * 3
+// Operations
+console.log(10000n + 10000n); // 20000n
 
-console.log(7 % 2); // 1
-console.log(7 / 2); // 3 => 7 = 2 * 3 + 1
+// we can't mix regular numbers with bigInt numbers
+console.log(1212121212121212121212n * 100000000n); // 121212121212121212121200000000n
+//console.log(Math.sqrt(16n)); // Error: Cannot convert a BigInt value to a number
+const huge = 23234234234234234234234234n;
+const num = 23;
+//console.log(huge * num); // Error: Cannot mix BigInt and other types, use explicit conversions
+console.log(huge * BigInt(num)); // 534387387387387387387387382n
 
-const isEven = (n) => n % 2 === 0;
-console.log(isEven(8)); // true
-console.log(isEven(23)); // false
-console.log(isEven(514)); // true
+// Exceptions
+console.log(20n > 15); // true
+console.log(20n === 20); // false
+console.log(20n == 20); // true
+console.log(20n == "20"); // true
+console.log(typeof 20n); // bigint
 
-labelBalance.addEventListener("click", () => {
-  [...document.querySelectorAll(".movements__row")].forEach((row, i) => {
-    if (i % 2 === 0) row.style.backgroundColor = "orangered";
-    if (i % 3 === 0) row.style.backgroundColor = "blue";
-  });
-});
+console.log(huge + " is REALLY big!!!"); // 23234234234234234234234234 is REALLY big!!!
+
+// Division
+console.log(10n / 3n); // 3n - cut a decimal part
+console.log(10 / 3); // 3.3333333
