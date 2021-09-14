@@ -255,38 +255,36 @@ btnSort.addEventListener("click", function (e) {
 /////////////////////////////////////////////////
 // LECTURES
 
-// BigInt
-console.log(2 ** 53 - 1); // 9007199254740991
-console.log(Number.MAX_SAFE_INTEGER); // 9007199254740991
-console.log(2 ** 53 + 0); // 9007199254740992 - bigger because isn't save
-console.log(2 ** 53 + 1); // 9007199254740992 - the same because isn't save
-console.log(2 ** 53 + 2); // 9007199254740994 - because isn't save
-// use BigInt for that
+// Create a date
+console.log(new Date()); // Tue Sep 14 2021 09:29:26 GMT+0300 (Moscow Standard Time)
+console.log(new Date("Sep 13 2021 09:29:26")); // Mon Sep 13 2021 09:29:26 GMT+0300 (Moscow Standard Time)
+console.log(new Date("December 24, 2015")); // Thu Dec 24 2015 00:00:00 GMT+0300 (Moscow Standard Time)
 
-console.log(123123123123123123123123123123123); // 1.2312312312312312e+32
-console.log(123123123123123123123123123123123n); // 123123123123123123123123123123123n - bigInt number
-console.log(BigInt(123123123123123123123123123123123)); // 123123123123123119722110449090560n - bigInt number
+console.log(account1.movementsDates[0]); // 2019-11-18T21:31:17.178Z
+console.log(new Date(account1.movementsDates[0])); // Tue Nov 19 2019 00:31:17 GMT+0300 (Moscow Standard Time)
 
-// Operations
-console.log(10000n + 10000n); // 20000n
+console.log(new Date(2037, 10, 19, 15, 23, 5)); // Thu Nov 19 2037 15:23:05 GMT+0300 (Moscow Standard Time)
+console.log(new Date(2037, 0, 19, 15, 23, 5)); // Mon Jan 19 2037 15:23:05 GMT+0300 (Moscow Standard Time)
+console.log(new Date(2037, 0, 50, 15, 23, 5)); // 31Jan + 19 = 19Feb - Thu Feb 19 2037 15:23:05 GMT+0300 (Moscow Standard Time)
 
-// we can't mix regular numbers with bigInt numbers
-console.log(1212121212121212121212n * 100000000n); // 121212121212121212121200000000n
-//console.log(Math.sqrt(16n)); // Error: Cannot convert a BigInt value to a number
-const huge = 23234234234234234234234234n;
-const num = 23;
-//console.log(huge * num); // Error: Cannot mix BigInt and other types, use explicit conversions
-console.log(huge * BigInt(num)); // 534387387387387387387387382n
+console.log(new Date(0)); // Thu Jan 01 1970 03:00:00 GMT+0300 (Moscow Standard Time)
+console.log(new Date(3 * 24 * 60 * 60 * 1000)); //(3 days) - Sun Jan 04 1970 03:00:00 GMT+0300 (Moscow Standard Time)
 
-// Exceptions
-console.log(20n > 15); // true
-console.log(20n === 20); // false
-console.log(20n == 20); // true
-console.log(20n == "20"); // true
-console.log(typeof 20n); // bigint
+// Working with dates
+const future = new Date(2037, 10, 19, 15, 23);
+console.log(future); // Thu Nov 19 2037 15:23:00 GMT+0300 (Moscow Standard Time)
+console.log(future.getFullYear()); // 2037
+console.log(future.getMonth()); // 10 - November because start from 0
+console.log(future.getDate()); // 19
+console.log(future.getDay()); // 4 - day of the week (Thursday)
+console.log(future.getHours()); // 15
+console.log(future.getMinutes()); // 23
+console.log(future.getSeconds()); // 0
+console.log(future.toISOString()); // 2037-11-19T12:23:00.000Z
+console.log(future.getTime()); // 2142246180000 - from Thu Jan 01 1970 03:00:00 GMT+0300 (Moscow Standard Time) till "future"
+console.log(new Date(2142246180000)); // Thu Nov 19 2037 15:23:00 GMT+0300 (Moscow Standard Time)
 
-console.log(huge + " is REALLY big!!!"); // 23234234234234234234234234 is REALLY big!!!
+console.log(Date.now()); // 1631602011920 - from Thu Jan 01 1970 03:00:00 GMT+0300 (Moscow Standard Time) till "now"
 
-// Division
-console.log(10n / 3n); // 3n - cut a decimal part
-console.log(10 / 3); // 3.3333333
+future.setFullYear(2040);
+console.log(future); // Mon Nov 19 2040 15:23:00 GMT+0300 (Moscow Standard Time)
