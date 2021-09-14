@@ -255,51 +255,27 @@ btnSort.addEventListener("click", function (e) {
 /////////////////////////////////////////////////
 // LECTURES
 
-console.log(Math.sqrt(4)); // 2
-console.log(Math.sqrt(36)); // 6
-console.log(Math.sqrt(25)); // 5
-console.log(25 ** (1 / 2)); // 5
+// Remainder operator
+console.log(5 % 2); // 1 - remainder of a division
+console.log(5 / 2); // 2.5 ( 5 = 2 * 2 + 1 ) - division (1 is remainder)
 
-console.log(Math.min(5, 18, 23, 11, 2)); // 2
-console.log(Math.max(5, 18, 23, 11, 2)); // 23
-console.log(Math.max(5, 18, "23", 11, 2)); // 23
-console.log(Math.max(5, 18, "23px", 11, 2)); // NaN
+console.log(8 % 3); // 2
+console.log(8 / 3); // 2.6666 => 8 = 2 * 3 + 2
 
-console.log(Math.PI); // 3.141592653589793
+console.log(6 % 2); // 0
+console.log(6 / 2); // 3 => 6 = 2 * 3
 
-console.log(Math.random()); // random value from 0 till 1
+console.log(7 % 2); // 1
+console.log(7 / 2); // 3 => 7 = 2 * 3 + 1
 
-// From min to max random value
-const randomInt = (min, max) =>
-  Math.floor(Math.random() * (max - min) + 1) + min;
-// 0...1 -> 0...(max - min) -> min...max
-console.log(randomInt(0, 6)); // from 1 till 6
+const isEven = (n) => n % 2 === 0;
+console.log(isEven(8)); // true
+console.log(isEven(23)); // false
+console.log(isEven(514)); // true
 
-// Rounding integers
-console.log(Math.trunc(23.3)); // 23
-console.log(Math.trunc("23.9")); // 23
-console.log(Math.trunc(-23.3)); // -23
-console.log(Math.trunc(-23.9)); // -23
-
-console.log(Math.round(23.3)); // 23
-console.log(Math.round(23.9)); // 24
-console.log(Math.round(-23.3)); // -23
-console.log(Math.round(-23.9)); // -24
-
-console.log(Math.ceil(23.3)); // 24
-console.log(Math.ceil(23.9)); // 24
-console.log(Math.ceil(-23.3)); // -23
-console.log(Math.ceil(-23.9)); // -23
-
-console.log(Math.floor(23.3)); // 23
-console.log(Math.floor(23.9)); // 23
-console.log(Math.floor(-23.3)); // 24
-console.log(Math.floor(-23.9)); // -24
-
-// Rounding decimals
-console.log(+(2.7).toFixed(0)); // 3 (use + because returns a string)
-console.log(+(2.3).toFixed(0)); // 2
-console.log(+(2.7).toFixed(1)); // 2.7 - after point
-console.log(+(2.7).toFixed(2)); // 2.70
-console.log(+(2.7).toFixed(3)); // 2.700
-console.log(+(2.723).toFixed(1)); // 2.7
+labelBalance.addEventListener("click", () => {
+  [...document.querySelectorAll(".movements__row")].forEach((row, i) => {
+    if (i % 2 === 0) row.style.backgroundColor = "orangered";
+    if (i % 3 === 0) row.style.backgroundColor = "blue";
+  });
+});
