@@ -16,14 +16,14 @@ const account1 = {
   pin: 1111,
 
   movementsDates: [
-    "2019-11-18T21:31:17.178Z",
-    "2019-12-23T07:42:02.383Z",
-    "2020-01-28T09:15:04.904Z",
-    "2020-04-01T10:17:24.185Z",
-    "2020-05-08T14:11:59.604Z",
-    "2020-05-27T17:01:17.194Z",
-    "2020-07-11T23:36:17.929Z",
-    "2020-07-12T10:51:36.790Z",
+    "2020-12-23T07:42:02.383Z",
+    "2021-11-18T21:31:17.178Z",
+    "2021-01-28T09:15:04.904Z",
+    "2021-04-01T10:17:24.185Z",
+    "2021-05-08T14:11:59.604Z",
+    "2021-05-27T17:01:17.194Z",
+    "2021-09-14T10:51:36.790Z",
+    "2021-09-14T23:36:17.929Z",
   ],
   currency: "EUR",
   locale: "pt-PT", // de-DE
@@ -36,14 +36,14 @@ const account2 = {
   pin: 2222,
 
   movementsDates: [
-    "2019-11-01T13:15:33.035Z",
-    "2019-11-30T09:48:16.867Z",
-    "2019-12-25T06:04:23.907Z",
-    "2020-01-25T14:18:46.235Z",
-    "2020-02-05T16:33:06.386Z",
-    "2020-04-10T14:43:26.374Z",
-    "2020-06-25T18:49:59.371Z",
-    "2020-07-26T12:01:20.894Z",
+    "2020-11-01T13:15:33.035Z",
+    "2020-11-30T09:48:16.867Z",
+    "2020-12-25T06:04:23.907Z",
+    "2021-01-25T14:18:46.235Z",
+    "2021-02-05T16:33:06.386Z",
+    "2021-04-10T14:43:26.374Z",
+    "2021-06-25T18:49:59.371Z",
+    "2021-07-26T12:01:20.894Z",
   ],
   currency: "USD",
   locale: "en-US",
@@ -81,31 +81,36 @@ const inputClosePin = document.querySelector(".form__input--pin");
 /////////////////////////////////////////////////
 // Functions
 
+const formatMovementDate = (date) => {
+  const calcDaysPassed = (date1, date2) =>
+    Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
+
+  const daysPassed = calcDaysPassed(new Date(), date);
+  console.log(daysPassed);
+
+  if (daysPassed === 0) return "Today";
+  if (daysPassed === 1) return "Yesterday";
+  if (daysPassed <= 7) return `${daysPassed} days ago`;
+
+  const day = `${date.getDate()}`.padStart(2, "0");
+  const month = `${date.getMonth() + 1}`.padStart(2, "0"); // because start from 0
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
+};
+
 const displayMovements = function (acc, sort = false) {
   const { movements, movementsDates } = acc;
   containerMovements.innerHTML = "";
 
-  console.log("start: ", movements);
   let movs = movements.map((mov, i) => ({ mov, date: movementsDates[i] }));
 
-  console.log("movs: ", movs);
-
   movs = sort ? movs.sort((a, b) => a.mov - b.mov) : movs;
-
-  console.log("after: ", movs);
 
   movs.forEach(function ({ mov, date }, i) {
     const type = mov > 0 ? "deposit" : "withdrawal";
 
-    const day = new Date(date);
-
-    const dateState = {
-      date: `${day.getDate()}`.padStart(2, "0"),
-      month: `${day.getMonth() + 1}`.padStart(2, "0"), // because start from 0
-      year: day.getFullYear(),
-    };
-
-    const displayDate = `${dateState.date}/${dateState.month}/${dateState.year}`;
+    const displayDate = formatMovementDate(new Date(date));
 
     const html = `
       <div class="movements__row">
@@ -183,8 +188,8 @@ const now = new Date();
 const date = `${now.getDate()}`.padStart(2, "0");
 const month = `${now.getMonth() + 1}`.padStart(2, "0"); // because start from 0
 const year = now.getFullYear();
-const hour = now.getHours();
-const min = now.getMinutes();
+const hour = `${now.getHours()}`.padStart(2, "0");
+const min = `${now.getMinutes()}`.padStart(2, "0");
 labelDate.textContent = `${date}/${month}/${year}, ${hour}:${min}`;
 
 // day/month/year
@@ -294,4 +299,24 @@ btnSort.addEventListener("click", function (e) {
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
-// LECTURES
+// Operations with Dates
+/*
+const future = new Date(2037, 10, 19, 15, 23);
+console.log(future); //Thu Nov 19 2037 15:23:00 GMT+0300 (Moscow Standard Time)
+console.log(Number(future)); // 2142246180000
+console.log(new Date(2142246180000)); // Thu Nov 19 2037 15:23:00 GMT+0300 (Moscow Standard Time)
+
+const calcDaysPassed = (date1, date2) => {
+  const dateSum = Math.abs(date2 - date1);
+  // Math.abs change negative to positive;
+  // Math.abs(3 - 5) = 2
+  // Math.abs(5 - 3) = 2
+  // convert numbers into days
+  return dateSum / (1000 * 60 * 60 * 24);
+};
+
+const days1 = calcDaysPassed(
+  new Date(2037, 3, 14, 10, 8),
+  new Date(2037, 3, 24, 23, 10)
+);
+console.log(days1); // 10.543055555555556 - 10 days adn 54....*/
