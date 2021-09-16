@@ -94,14 +94,14 @@ const formatMovementDate = (date, locale) => {
   return new Intl.DateTimeFormat(locale).format(date);
 };
 
-const formattedMoney = (sum, locale) =>
+const formattedMoney = (sum, locale, currency) =>
   new Intl.NumberFormat(locale, {
     style: "currency",
-    currency: "USD",
+    currency,
   }).format(sum);
 
 const displayMovements = function (acc, sort = false) {
-  const { movements, movementsDates, locale } = acc;
+  const { movements, movementsDates, locale, currency } = acc;
   containerMovements.innerHTML = "";
 
   let movs = movements.map((mov, i) => ({ mov, date: movementsDates[i] }));
@@ -119,7 +119,11 @@ const displayMovements = function (acc, sort = false) {
       i + 1
     } ${type}</div>
         <div class="movements__date">${displayDate}</div>
-        <div class="movements__value">${formattedMoney(mov, locale)}</div>
+        <div class="movements__value">${formattedMoney(
+          mov,
+          locale,
+          currency
+        )}</div>
       </div>
     `;
 
@@ -129,26 +133,38 @@ const displayMovements = function (acc, sort = false) {
 
 const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = formattedMoney(acc.balance, acc.locale);
+  labelBalance.textContent = formattedMoney(
+    acc.balance,
+    acc.locale,
+    acc.currency
+  );
 };
 
 const calcDisplaySummary = function (acc) {
   const incomes = acc.movements
     .filter((mov) => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumIn.textContent = `${incomes.toFixed(2)}€`;
+  labelSumIn.textContent = formattedMoney(incomes, acc.locale, acc.currency);
 
   const out = acc.movements
     .filter((mov) => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumOut.textContent = `${Math.abs(out).toFixed(2)}€`;
+  labelSumOut.textContent = formattedMoney(
+    Math.abs(out),
+    acc.locale,
+    acc.currency
+  );
 
   const interest = acc.movements
     .filter((mov) => mov > 0)
     .map((deposit) => (deposit * acc.interestRate) / 100)
     .filter((int, i, arr) => int >= 1)
     .reduce((acc, int) => acc + int, 0);
-  labelSumInterest.textContent = `${interest.toFixed(2)}€`;
+  labelSumInterest.textContent = formattedMoney(
+    interest,
+    acc.locale,
+    acc.currency
+  );
 };
 
 const createUsernames = function (accs) {
@@ -173,9 +189,39 @@ const updateUI = function (acc) {
   calcDisplaySummary(acc);
 };
 
+const startLogOutTimer = () => {
+  const tick = () => {
+    const min = String(Math.trunc(time / 60)).padStart(2, "0");
+    const sec = String(Math.trunc(time % 60)).padStart(2, "0");
+
+    // In each call, print the remaining time to UI
+    labelTimer.textContent = `${min}:${sec}`;
+
+    // When 0 seconds, stop timer and log out user
+    if (time === 0) {
+      clearInterval(timer);
+
+      labelWelcome.textContent = "Log in to get started";
+      containerApp.style.opacity = 0;
+    }
+
+    // Decrease 1s
+    time--;
+  };
+
+  // Set time to 5 minutes
+  let time = 300;
+
+  // Call the time every second, use this const for clearInterval
+  tick(); // Start immediately
+  const timer = setInterval(tick, 1000); // First start only after 1000
+
+  return timer; // return this for clearInterval
+};
+
 ///////////////////////////////////////
 // Event handlers
-let currentAccount;
+let currentAccount, timer;
 
 const login = () => {
   currentAccount = accounts.find(
@@ -206,6 +252,11 @@ const login = () => {
       currentAccount.locale,
       options
     ).format(now);
+
+    // Start Log out timer
+    // Clear after login, because we can already have timer
+    timer && clearInterval(timer);
+    timer = startLogOutTimer();
 
     // Update UI
     updateUI(currentAccount);
@@ -246,6 +297,10 @@ btnTransfer.addEventListener("click", function (e) {
 
     // Update UI
     updateUI(currentAccount);
+
+    // Reset timer
+    clearInterval(timer);
+    timer = startLogOutTimer();
   }
 });
 
@@ -258,14 +313,20 @@ btnLoan.addEventListener("click", function (e) {
     amount > 0 &&
     currentAccount.movements.some((mov) => mov >= amount * 0.1)
   ) {
-    // Add movement
-    currentAccount.movements.push(amount);
+    setTimeout(() => {
+      // Add movement
+      currentAccount.movements.push(amount);
 
-    // Add loan date
-    currentAccount.movementsDates.push(new Date().toISOString());
+      // Add loan date
+      currentAccount.movementsDates.push(new Date().toISOString());
 
-    // Update UI
-    updateUI(currentAccount);
+      // Update UI
+      updateUI(currentAccount);
+
+      // Reset timer
+      clearInterval(timer);
+      timer = startLogOutTimer();
+    }, 2000);
   }
   inputLoanAmount.value = "";
 });
@@ -298,43 +359,3 @@ btnSort.addEventListener("click", function (e) {
   displayMovements(currentAccount, !sorted);
   sorted = !sorted;
 });
-
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
-// Internationalizing Numbers (Intl)
-/*const num = 3884764.23;
-console.log("US:", new Intl.NumberFormat("en-US").format(num)); // US: 3,884,764.23
-console.log("Germany:", new Intl.NumberFormat("de-De").format(num)); // Germany: 3.884.764,23
-console.log("Rus:", new Intl.NumberFormat("rus").format(num)); // Rus: 3 884 764,23
-console.log("Suria:", new Intl.NumberFormat("ar-SY").format(num)); // Suria: ٣٬٨٨٤٬٧٦٤٫٢٣
-
-const options = {
-  style: "unit",
-  unit: "mile-per-hour",
-};
-
-console.log("US:", new Intl.NumberFormat("en-US", options).format(num)); // US: 3,884,764.23 mph
-console.log("Germany:", new Intl.NumberFormat("de-De", options).format(num)); // Germany: 3.884.764,23 mi/h
-console.log("Rus:", new Intl.NumberFormat("rus", options).format(num)); // Rus: 3 884 764,23 ми/ч
-console.log("Suria:", new Intl.NumberFormat("ar-SY", options).format(num)); // Suria: ٣٬٨٨٤٬٧٦٤٫٢٣ ميل/س
-
-options.unit = "celsius";
-console.log("US:", new Intl.NumberFormat("en-US", options).format(num)); // US: 3,884,764.23°C
-console.log("Germany:", new Intl.NumberFormat("de-De", options).format(num)); // Germany: 3.884.764,23 °C
-console.log("Rus:", new Intl.NumberFormat("rus", options).format(num)); // Rus: 3 884 764,23 °C
-
-const options2 = {
-  style: "currency",
-  unit: "celsius",
-  currency: "EUR",
-};
-
-console.log("US:", new Intl.NumberFormat("en-US", options2).format(num)); // US: €3,884,764.23
-console.log("Germany:", new Intl.NumberFormat("de-De", options2).format(num)); // Germany: 3.884.764,23 €
-console.log("Rus:", new Intl.NumberFormat("rus", options2).format(num)); // Rus: 3 884 764,23 €
-
-options2.useGrouping = false;
-
-console.log("US:", new Intl.NumberFormat("en-US", options2).format(num)); // US: €3884764.23
-console.log("Germany:", new Intl.NumberFormat("de-De", options2).format(num)); // Germany: 3884764,23 €
-console.log("Rus:", new Intl.NumberFormat("rus", options2).format(num)); // Rus: 3884764,23 €*/
