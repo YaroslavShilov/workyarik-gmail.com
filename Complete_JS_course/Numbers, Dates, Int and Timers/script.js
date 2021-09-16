@@ -81,26 +81,27 @@ const inputClosePin = document.querySelector(".form__input--pin");
 /////////////////////////////////////////////////
 // Functions
 
-const formatMovementDate = (date) => {
+const formatMovementDate = (date, locale) => {
   const calcDaysPassed = (date1, date2) =>
     Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
 
   const daysPassed = calcDaysPassed(new Date(), date);
-  console.log(daysPassed);
 
   if (daysPassed === 0) return "Today";
   if (daysPassed === 1) return "Yesterday";
   if (daysPassed <= 7) return `${daysPassed} days ago`;
 
-  const day = `${date.getDate()}`.padStart(2, "0");
-  const month = `${date.getMonth() + 1}`.padStart(2, "0"); // because start from 0
-  const year = date.getFullYear();
-
-  return `${day}/${month}/${year}`;
+  return new Intl.DateTimeFormat(locale).format(date);
 };
 
+const formattedMoney = (sum, locale) =>
+  new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: "USD",
+  }).format(sum);
+
 const displayMovements = function (acc, sort = false) {
-  const { movements, movementsDates } = acc;
+  const { movements, movementsDates, locale } = acc;
   containerMovements.innerHTML = "";
 
   let movs = movements.map((mov, i) => ({ mov, date: movementsDates[i] }));
@@ -110,7 +111,7 @@ const displayMovements = function (acc, sort = false) {
   movs.forEach(function ({ mov, date }, i) {
     const type = mov > 0 ? "deposit" : "withdrawal";
 
-    const displayDate = formatMovementDate(new Date(date));
+    const displayDate = formatMovementDate(new Date(date), locale);
 
     const html = `
       <div class="movements__row">
@@ -118,7 +119,7 @@ const displayMovements = function (acc, sort = false) {
       i + 1
     } ${type}</div>
         <div class="movements__date">${displayDate}</div>
-        <div class="movements__value">${mov.toFixed(2)}€</div>
+        <div class="movements__value">${formattedMoney(mov, locale)}</div>
       </div>
     `;
 
@@ -128,7 +129,7 @@ const displayMovements = function (acc, sort = false) {
 
 const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${acc.balance.toFixed(2)}€`;
+  labelBalance.textContent = formattedMoney(acc.balance, acc.locale);
 };
 
 const calcDisplaySummary = function (acc) {
@@ -145,10 +146,7 @@ const calcDisplaySummary = function (acc) {
   const interest = acc.movements
     .filter((mov) => mov > 0)
     .map((deposit) => (deposit * acc.interestRate) / 100)
-    .filter((int, i, arr) => {
-      // console.log(arr);
-      return int >= 1;
-    })
+    .filter((int, i, arr) => int >= 1)
     .reduce((acc, int) => acc + int, 0);
   labelSumInterest.textContent = `${interest.toFixed(2)}€`;
 };
@@ -179,29 +177,10 @@ const updateUI = function (acc) {
 // Event handlers
 let currentAccount;
 
-// FAKE ALWAYS LOGGED IN
-currentAccount = account1;
-updateUI(currentAccount);
-containerApp.style.opacity = 1;
-
-const now = new Date();
-const date = `${now.getDate()}`.padStart(2, "0");
-const month = `${now.getMonth() + 1}`.padStart(2, "0"); // because start from 0
-const year = now.getFullYear();
-const hour = `${now.getHours()}`.padStart(2, "0");
-const min = `${now.getMinutes()}`.padStart(2, "0");
-labelDate.textContent = `${date}/${month}/${year}, ${hour}:${min}`;
-
-// day/month/year
-
-btnLogin.addEventListener("click", function (e) {
-  // Prevent form from submitting
-  e.preventDefault();
-
+const login = () => {
   currentAccount = accounts.find(
     (acc) => acc.username === inputLoginUsername.value
   );
-  console.log(currentAccount);
 
   if (currentAccount?.pin === +inputLoginPin.value) {
     // Display UI and message
@@ -214,9 +193,33 @@ btnLogin.addEventListener("click", function (e) {
     inputLoginUsername.value = inputLoginPin.value = "";
     inputLoginPin.blur();
 
+    // Create current date and time
+    const now = new Date();
+    const options = {
+      hour: "numeric",
+      minute: "numeric",
+      day: "numeric",
+      month: "numeric",
+      year: "numeric",
+    };
+    labelDate.textContent = new Intl.DateTimeFormat(
+      currentAccount.locale,
+      options
+    ).format(now);
+
     // Update UI
     updateUI(currentAccount);
   }
+};
+
+// FAKE ALWAYS LOGGED IN
+inputLoginUsername.value = "js";
+inputLoginPin.value = 1111;
+login();
+
+btnLogin.addEventListener("click", (e) => {
+  e.preventDefault();
+  login();
 });
 
 btnTransfer.addEventListener("click", function (e) {
@@ -277,7 +280,6 @@ btnClose.addEventListener("click", function (e) {
     const index = accounts.findIndex(
       (acc) => acc.username === currentAccount.username
     );
-    console.log(index);
     // .indexOf(23)
 
     // Delete account
@@ -299,24 +301,40 @@ btnSort.addEventListener("click", function (e) {
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
-// Operations with Dates
-/*
-const future = new Date(2037, 10, 19, 15, 23);
-console.log(future); //Thu Nov 19 2037 15:23:00 GMT+0300 (Moscow Standard Time)
-console.log(Number(future)); // 2142246180000
-console.log(new Date(2142246180000)); // Thu Nov 19 2037 15:23:00 GMT+0300 (Moscow Standard Time)
+// Internationalizing Numbers (Intl)
+/*const num = 3884764.23;
+console.log("US:", new Intl.NumberFormat("en-US").format(num)); // US: 3,884,764.23
+console.log("Germany:", new Intl.NumberFormat("de-De").format(num)); // Germany: 3.884.764,23
+console.log("Rus:", new Intl.NumberFormat("rus").format(num)); // Rus: 3 884 764,23
+console.log("Suria:", new Intl.NumberFormat("ar-SY").format(num)); // Suria: ٣٬٨٨٤٬٧٦٤٫٢٣
 
-const calcDaysPassed = (date1, date2) => {
-  const dateSum = Math.abs(date2 - date1);
-  // Math.abs change negative to positive;
-  // Math.abs(3 - 5) = 2
-  // Math.abs(5 - 3) = 2
-  // convert numbers into days
-  return dateSum / (1000 * 60 * 60 * 24);
+const options = {
+  style: "unit",
+  unit: "mile-per-hour",
 };
 
-const days1 = calcDaysPassed(
-  new Date(2037, 3, 14, 10, 8),
-  new Date(2037, 3, 24, 23, 10)
-);
-console.log(days1); // 10.543055555555556 - 10 days adn 54....*/
+console.log("US:", new Intl.NumberFormat("en-US", options).format(num)); // US: 3,884,764.23 mph
+console.log("Germany:", new Intl.NumberFormat("de-De", options).format(num)); // Germany: 3.884.764,23 mi/h
+console.log("Rus:", new Intl.NumberFormat("rus", options).format(num)); // Rus: 3 884 764,23 ми/ч
+console.log("Suria:", new Intl.NumberFormat("ar-SY", options).format(num)); // Suria: ٣٬٨٨٤٬٧٦٤٫٢٣ ميل/س
+
+options.unit = "celsius";
+console.log("US:", new Intl.NumberFormat("en-US", options).format(num)); // US: 3,884,764.23°C
+console.log("Germany:", new Intl.NumberFormat("de-De", options).format(num)); // Germany: 3.884.764,23 °C
+console.log("Rus:", new Intl.NumberFormat("rus", options).format(num)); // Rus: 3 884 764,23 °C
+
+const options2 = {
+  style: "currency",
+  unit: "celsius",
+  currency: "EUR",
+};
+
+console.log("US:", new Intl.NumberFormat("en-US", options2).format(num)); // US: €3,884,764.23
+console.log("Germany:", new Intl.NumberFormat("de-De", options2).format(num)); // Germany: 3.884.764,23 €
+console.log("Rus:", new Intl.NumberFormat("rus", options2).format(num)); // Rus: 3 884 764,23 €
+
+options2.useGrouping = false;
+
+console.log("US:", new Intl.NumberFormat("en-US", options2).format(num)); // US: €3884764.23
+console.log("Germany:", new Intl.NumberFormat("de-De", options2).format(num)); // Germany: 3884764,23 €
+console.log("Rus:", new Intl.NumberFormat("rus", options2).format(num)); // Rus: 3884764,23 €*/
