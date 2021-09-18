@@ -5,6 +5,7 @@ const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
 const btnScrollTo = document.querySelector('.btn--scroll-to');
 const section1 = document.querySelector('#section--1');
+const nav = document.querySelector('.nav');
 
 ///////////////////////////////////////
 // Modal window
@@ -54,32 +55,53 @@ document
   .querySelector('.operations__tab-container')
   .addEventListener('click', e => {
     e.preventDefault();
+    const target = e.target.closest('.operations__tab');
+
+    console.log(target);
 
     // Check if the target is tab and not active tab
-    if (
-      e.target.classList.contains('operations__tab') &&
-      !e.target.classList.contains('operations__tab--active')
-    ) {
-      // Remove active from previous active tab
-      document
-        .querySelector('.operations__tab--active')
-        .classList.remove('operations__tab--active');
-
-      // Remove active from previous active content
-      document
-        .querySelector('.operations__content--active')
-        .classList.remove('operations__content--active');
-
-      // Add active to this tab
-      e.target.classList.add('operations__tab--active');
-
-      // Add active to this content
-      const id = e.target.dataset.tab;
-      document
-        .querySelector(`.operations__content--${id}`)
-        .classList.add('operations__content--active');
+    if (!target || target?.classList.contains('operations__tab--active')) {
+      return;
     }
+
+    // Remove active from previous active tab
+    document
+      .querySelector('.operations__tab--active')
+      .classList.remove('operations__tab--active');
+
+    // Remove active from previous active content
+    document
+      .querySelector('.operations__content--active')
+      .classList.remove('operations__content--active');
+
+    // Add active to this tab
+    target.classList.add('operations__tab--active');
+
+    // Add active to this content
+    document
+      .querySelector(`.operations__content--${target.dataset.tab}`)
+      .classList.add('operations__content--active');
   });
+
+////////////////////////////////////////////////////////////////////////////////////////
+// Menu fade animation
+const handleHover = (e, opacity) => {
+  if (e.target.classList.contains('nav__link')) {
+    const link = e.target;
+    const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+    const logo = link.closest('.nav').querySelector('img');
+
+    siblings.forEach(el => {
+      if (el !== link) el.style.opacity = opacity;
+    });
+
+    logo.style.opacity = opacity;
+  }
+};
+
+nav.addEventListener('mouseover', e => handleHover(e, 0.5));
+
+nav.addEventListener('mouseout', e => handleHover(e, 1));
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
