@@ -57,8 +57,6 @@ document
     e.preventDefault();
     const target = e.target.closest('.operations__tab');
 
-    console.log(target);
-
     // Check if the target is tab and not active tab
     if (!target || target?.classList.contains('operations__tab--active')) {
       return;
@@ -105,45 +103,11 @@ nav.addEventListener('mouseout', e => handleHover(e, 1));
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // Sticky Navigation
-const obsCallback = (entries, observer) => {
-  console.log('callback');
-  console.log('entries: ', entries); // entries:  [IntersectionObserverEntry]
-  console.log('observer: ', observer);
-  // observer:
-  // IntersectionObserver {root: null, rootMargin: '0px 0px 0px 0px', thresholds: Array(1), delay: 0, trackVisibility: false}
-
-  entries.forEach(entry => {
-    console.log('entry ', entry);
-    // entry
-    // IntersectionObserverEntry {
-    // time: 480.69999998807907,
-    // rootBounds: DOMRectReadOnly,
-    // boundingClientRect: DOMRectReadOnly,
-    // intersectionRect: DOMRectReadOnly,
-    // isIntersecting: true,
-    // …
-    // }
-  });
-};
-
-const obsOptions = {
-  root: null,
-  threshold: [0, 0.2], // percent
-};
-
-const observer = new IntersectionObserver(obsCallback, obsOptions);
-console.log('variable: ', observer);
-// variable:
-// IntersectionObserver {root: null, rootMargin: '0px 0px 0px 0px', thresholds: Array(1), delay: 0, trackVisibility: false}
-observer.observe(section1);
-
-///////////////////////
 const header = document.querySelector('.header');
 const navHeight = nav.getBoundingClientRect().height;
 
 const stickyNav = entries => {
   const [entry] = entries;
-  console.log('hello:', entry);
   entry.isIntersecting
     ? nav.classList.remove('sticky')
     : nav.classList.add('sticky');
@@ -155,6 +119,28 @@ const headerObserver = new IntersectionObserver(stickyNav, {
   rootMargin: `-${navHeight}px`,
 });
 headerObserver.observe(header);
+
+////////////////////////////////////////////////////////////////////////////////////////
+// Revealing Elements on Scroll
+// Reveal sections
+const allSections = document.querySelectorAll('.section');
+const revealSection = (entires, observer) => {
+  const [entry] = entires;
+
+  if (!entry.isIntersecting) return;
+  entry.target.classList.remove('section--hidden'); // show the section
+  observer.unobserve(entry.target); // delete handler, because we've already showed the section
+};
+
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null,
+  threshold: 0.15,
+});
+
+allSections.forEach(section => {
+  sectionObserver.observe(section);
+  section.classList.add('section--hidden');
+});
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
