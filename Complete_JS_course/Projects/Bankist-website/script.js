@@ -124,8 +124,8 @@ headerObserver.observe(header);
 // Revealing Elements on Scroll
 // Reveal sections
 const allSections = document.querySelectorAll('.section');
-const revealSection = (entires, observer) => {
-  const [entry] = entires;
+const revealSection = (entries, observer) => {
+  const [entry] = entries;
 
   if (!entry.isIntersecting) return;
   entry.target.classList.remove('section--hidden'); // show the section
@@ -141,6 +141,39 @@ allSections.forEach(section => {
   sectionObserver.observe(section);
   section.classList.add('section--hidden');
 });
+
+////////////////////////////////////////////////////////////////////////////////////////
+// Lazy Loading Images
+/* HTML:
+<img
+  src="img/digital-lazy.jpg" // small img, 10kb - show this before we scroll to this big img
+  data-src="img/digital.jpg" // normal img, 500kb
+  alt="Computer"
+  class="lazy-img" // add blur (filter: blur(20px);) in css
+/>
+ */
+const imgTargets = document.querySelectorAll('img[data-src]');
+
+const loadImg = (entries, observer) => {
+  const [entry] = entries;
+  if (!entry.isIntersecting) return;
+  // Replace src with data-src
+  entry.target.src = entry.target.dataset.src;
+  entry.target.addEventListener('load', () => {
+    // use addEventListener('load') instead .classList.remove('lazy-img')
+    // because if our internet speed is low, we see nothing or bad picture
+    // that's why we show image after loading
+    entry.target.classList.remove('lazy-img');
+  });
+  observer.unobserve(entry.target); // delete handler, because we've already downloaded the img
+};
+
+const imgObserver = new IntersectionObserver(loadImg, {
+  root: null,
+  threshold: 0.1,
+});
+
+imgTargets.forEach(img => imgObserver.observe(img));
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
